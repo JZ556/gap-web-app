@@ -182,6 +182,51 @@ export function LandingHero() {
           </article>
         </div>
       </section>
+
+      <footer className="border-t border-white/15 bg-primary text-white">
+        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-10 px-6 py-12 text-center sm:px-10 md:flex-row md:items-start md:text-left lg:px-12">
+          <div className="max-w-xs">
+            <Link className="inline-flex items-center gap-3 text-lg font-extrabold" href="/">
+              <PawPrint aria-hidden="true" className="size-7 text-accent" strokeWidth={2.5} />
+              Greyhound Racing NSW
+            </Link>
+            <p className="mt-3 text-sm leading-6 text-white/85">
+              Connecting retired racers with loving families across Australia.
+            </p>
+          </div>
+
+          <div className="grid gap-10 sm:grid-cols-2 sm:gap-16">
+            <nav aria-label="Footer explore links" className="flex flex-col gap-3">
+              <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-accent">
+                Explore
+              </h2>
+              <Link className="text-sm text-white/90 transition hover:text-accent" href="/register">
+                Adopt
+              </Link>
+              <a className="text-sm text-white/90 transition hover:text-accent" href="#adoption-heroes">
+                Our Greyhounds
+              </a>
+            </nav>
+            <nav aria-label="Footer support links" className="flex flex-col gap-3">
+              <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-accent">
+                Support
+              </h2>
+              <a className="text-sm text-white/90 transition hover:text-accent" href="#footer-contact">
+                Contact Info
+              </a>
+              <a className="text-sm text-white/90 transition hover:text-accent" href="#privacy">
+                Privacy Policy
+              </a>
+              <Link className="text-sm text-white/90 transition hover:text-accent" href="/login">
+                Admin Login
+              </Link>
+            </nav>
+          </div>
+        </div>
+        <div className="border-t border-white/15 px-6 py-6 text-center text-sm text-white/75 sm:px-10 lg:px-12">
+          © 2026 Greyhound Racing NSW. All rights reserved.
+        </div>
+      </footer>
     </main>
   );
 }
