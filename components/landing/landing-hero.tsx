@@ -56,7 +56,7 @@ export function LandingHero() {
         <div className="order-2 flex w-full justify-center px-6 py-14 sm:px-10 lg:order-1 lg:w-1/2 lg:px-12 lg:py-24">
           <div className="max-w-xl">
             <h1 className="text-5xl font-extrabold leading-[1.04] tracking-tight text-primary sm:text-6xl">
-              Find Your Fast Friend.
+              Find Your Best Friend.
             </h1>
             <p className="mt-6 max-w-md text-base leading-7 text-foreground/75">
               Give a retired racing greyhound a loving home. Our program matches
