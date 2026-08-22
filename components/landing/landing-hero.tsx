@@ -36,7 +36,7 @@ export function LandingHero() {
   return (
     <main className="min-h-screen bg-background">
       <header className="bg-primary text-white">
-        <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-12">
+        <div className="mx-auto flex h-20 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-12">
           <Link className="flex items-center gap-3 font-extrabold" href="/">
             <PawPrint aria-hidden="true" className="size-8 text-accent" strokeWidth={2.5} />
             <span className="text-lg tracking-tight sm:text-xl">
@@ -52,7 +52,7 @@ export function LandingHero() {
         </div>
       </header>
 
-      <section className="mx-auto flex max-w-[1440px] flex-col items-center bg-white lg:flex-row">
+      <section className="mx-auto flex max-w-360 flex-col items-center bg-white lg:flex-row">
         <div className="order-2 flex w-full justify-center px-6 py-14 sm:px-10 lg:order-1 lg:w-1/2 lg:px-12 lg:py-24">
           <div className="max-w-xl">
             <h1 className="text-5xl font-extrabold leading-[1.04] tracking-tight text-primary sm:text-6xl">
@@ -105,7 +105,7 @@ export function LandingHero() {
       </section>
 
       <section
-        className="mx-auto max-w-[1440px] px-6 py-16 sm:px-10 lg:px-12 lg:py-24"
+        className="mx-auto max-w-360 px-6 py-16 sm:px-10 lg:px-12 lg:py-24"
         id="adoption-heroes"
       >
         <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
@@ -132,7 +132,7 @@ export function LandingHero() {
               className="overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
               key={hound.name}
             >
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div className="relative aspect-4/3 overflow-hidden">
                 <Image
                   alt={`${hound.name}, an available retired greyhound`}
                   className="object-cover transition duration-500 hover:scale-105"
@@ -164,7 +164,7 @@ export function LandingHero() {
           ))}
 
           <article className="hidden overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] xl:block">
-            <div className="relative grid aspect-[4/3] place-items-center bg-surface-muted text-primary/25">
+            <div className="relative grid aspect-4/3 place-items-center bg-surface-muted text-primary/25">
               <PawPrint aria-hidden="true" className="size-14" />
               <span className="absolute left-4 top-4 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-sm">
                 Coming soon
@@ -184,7 +184,7 @@ export function LandingHero() {
       </section>
 
       <footer className="border-t border-white/15 bg-primary text-white">
-        <div className="mx-auto flex max-w-[1440px] flex-col items-center justify-between gap-10 px-6 py-12 text-center sm:px-10 md:flex-row md:items-start md:text-left lg:px-12">
+        <div className="mx-auto flex max-w-360 flex-col items-center justify-between gap-10 px-6 py-12 text-center sm:px-10 md:flex-row md:items-start md:text-left lg:px-12">
           <div className="max-w-xs">
             <Link className="inline-flex items-center gap-3 text-lg font-extrabold" href="/">
               <PawPrint aria-hidden="true" className="size-7 text-accent" strokeWidth={2.5} />
