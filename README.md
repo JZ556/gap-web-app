@@ -38,3 +38,5 @@ npm run build
 ## Design foundation
 
 The application uses Open Sans with a light, institutional visual system. Its primary colour is deep navy (`#00334c`), cyan is used for interactive emphasis, and green is reserved for success and availability states. The global tokens in `app/globals.css` are the shared source of truth for future public and admin screens.
+//san man here
+
