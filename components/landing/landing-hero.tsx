@@ -60,7 +60,7 @@ export function LandingHero() {
             </h1>
             <p className="mt-6 max-w-md text-base leading-7 text-foreground/75">
               Give a retired racing greyhound a loving home. Our program matches
-              these incredible dogs with perfect families.
+              these incredible greyhounds with perfect families.
             </p>
             <Link
               className="mt-8 inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
@@ -91,11 +91,11 @@ export function LandingHero() {
           </div>
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
-              Every Hound Deserves a Couch
+              Every Greyhound Deserves a Couch
             </h2>
             <p className="mt-4 text-base leading-7 text-foreground/75">
               Our adoption program carefully matches retired greyhounds with the
-              perfect families. Every hound is vet-checked, desexed, and
+              perfect families. Every greyhound is vet-checked, desexed, and
               comprehensively assessed to ensure they are ready for a comfortable
               new life off the track. We are committed to finding forever homes
               where they can thrive as beloved companions.
@@ -195,38 +195,29 @@ export function LandingHero() {
             </p>
           </div>
 
-          <div className="grid gap-10 sm:grid-cols-2 sm:gap-16">
-            <nav aria-label="Footer explore links" className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3" id="footer-contact">
+            <address className="flex flex-col gap-3 not-italic">
               <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-accent">
-                Explore
+                Contact
               </h2>
-              <Link className="text-sm text-white/90 transition hover:text-accent" href="/register">
-                Adopt
-              </Link>
-              <a className="text-sm text-white/90 transition hover:text-accent" href="#adoption-heroes">
-                Our Greyhounds
+              <a className="text-sm text-white/90 transition hover:text-accent" href="mailto:adoption-demo@example.com">
+                adoption-demo@example.com
               </a>
-            </nav>
-            <nav aria-label="Footer support links" className="flex flex-col gap-3">
-              <h2 className="text-sm font-extrabold uppercase tracking-[0.14em] text-accent">
-                Support
-              </h2>
-              <a className="text-sm text-white/90 transition hover:text-accent" href="#footer-contact">
-                Contact Info
+              <a className="text-sm text-white/90 transition hover:text-accent" href="tel:+61200000000">
+                (02) 0000 0000
               </a>
-              <a className="text-sm text-white/90 transition hover:text-accent" href="#privacy">
-                Privacy Policy
-              </a>
-              <Link className="text-sm text-white/90 transition hover:text-accent" href="/login">
-                Admin Login
-              </Link>
-            </nav>
+            </address>
+            <Link className="text-sm text-white/90 transition hover:text-accent" href="/login?next=/admin/dashboard">
+              Staff Login
+            </Link>
           </div>
         </div>
         <div className="border-t border-white/15 px-6 py-6 text-center text-sm text-white/75 sm:px-10 lg:px-12">
-          © 2026 Greyhound Racing NSW. All rights reserved.
+          Student capstone prototype. Not an official Greyhound Racing NSW service.
+          <span className="mt-2 block">Copyright 2026 Greyhound Racing NSW. All rights reserved.</span>
         </div>
       </footer>
     </main>
   );
 }
+
