@@ -29,7 +29,7 @@ export function AuthCard({ children, mode }: AuthCardProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 border-b border-border bg-surface-subtle">
+      <div className="grid grid-cols-2 border-b border-border bg-white">
         {tabs.map((tab) => {
           const isActive = tab.mode === mode;
 
@@ -38,8 +38,8 @@ export function AuthCard({ children, mode }: AuthCardProps) {
               aria-current={isActive ? "page" : undefined}
               className={`border-b-2 px-6 py-4 text-center text-sm font-semibold tracking-[0.08em] transition ${
                 isActive
-                  ? "border-primary bg-primary text-white"
-                  : "border-transparent bg-white text-foreground/70 hover:bg-surface-subtle hover:text-primary"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-foreground/60 hover:bg-surface-subtle hover:text-primary"
               }`}
               href={tab.href}
               key={tab.mode}
