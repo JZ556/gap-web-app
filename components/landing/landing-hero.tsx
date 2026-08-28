@@ -207,7 +207,7 @@ export function LandingHero() {
                 (02) 0000 0000
               </a>
             </address>
-            <Link className="text-sm text-white/90 transition hover:text-accent" href="/login?next=/admin/dashboard">
+            <Link className="text-sm text-white/90 transition hover:text-accent" href="/staff-login">
               Staff Login
             </Link>
           </div>
