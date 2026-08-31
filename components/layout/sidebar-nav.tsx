@@ -33,7 +33,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
         })}
       </div>
 
-      <div className="mt-auto border-t border-border p-4">
+      <div className="mt-auto p-4">
         <button
           className="flex min-h-11 w-full items-center gap-3 rounded-sm px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:bg-surface-app hover:text-primary"
           type="button"
