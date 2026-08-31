@@ -21,8 +21,8 @@ export function DashboardShell({
   userInitials,
 }: DashboardShellProps) {
   return (
-    <main className="min-h-screen bg-network px-4 py-6 text-foreground sm:px-6 lg:px-8">
-      <div className="mx-auto grid min-h-[calc(100vh-3rem)] max-w-360 overflow-hidden rounded-lg border border-white/15 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.22)] md:grid-cols-[240px_1fr]">
+    <main className="min-h-screen bg-surface-subtle text-foreground">
+      <div className="grid min-h-screen bg-white md:grid-cols-[240px_1fr]">
         <aside className="flex border-b border-border bg-white md:border-b-0 md:border-r">
           <div className="flex min-h-full w-full flex-col">
             <div className="flex items-center gap-3 border-b border-border px-5 py-6">
