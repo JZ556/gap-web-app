@@ -20,7 +20,6 @@ export default function AdminDashboardPage() {
       brandSubtitle="Rescue & Adoption Portal"
       brandTitle="GRNSW Admin"
       navItems={adminNavItems}
-      userInitials="AD"
     >
       <div className="space-y-8">
         <div>

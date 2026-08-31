@@ -9,7 +9,6 @@ type DashboardShellProps = {
   brandTitle: string;
   children: ReactNode;
   navItems: SidebarNavItem[];
-  userInitials?: string;
 };
 
 export function DashboardShell({
@@ -18,7 +17,6 @@ export function DashboardShell({
   brandTitle,
   children,
   navItems,
-  userInitials,
 }: DashboardShellProps) {
   return (
     <main className="min-h-screen bg-surface-app text-foreground">
@@ -44,17 +42,6 @@ export function DashboardShell({
         </aside>
 
         <section className="min-w-0 bg-surface-app">
-          <header className="flex min-h-16 items-center justify-between border-b border-border bg-white px-6">
-            <h1 className="text-xl font-extrabold tracking-tight text-primary">
-              Greyhound Racing NSW
-            </h1>
-            {userInitials ? (
-              <div className="grid size-9 place-items-center rounded-full bg-primary/10 text-xs font-extrabold text-primary">
-                {userInitials}
-              </div>
-            ) : null}
-          </header>
-
           <div className="p-6 sm:p-8">{children}</div>
         </section>
       </div>

@@ -12,12 +12,11 @@ export default function UserDashboardPage() {
       brandSubtitle="Adoption Portal"
       brandTitle="Greyhound Racing NSW"
       navItems={userNavItems}
-      userInitials="JD"
     >
       <div className="space-y-8">
         <div>
           <h2 className="text-3xl font-extrabold tracking-tight text-primary">
-            Welcome back, John
+            Hi John
           </h2>
           <p className="mt-2 text-sm text-foreground/70">
             Here is an overview of your adoption journey.
