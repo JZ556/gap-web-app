@@ -4,6 +4,7 @@
   --background: #ffffff;
   --foreground: #17394b;
   --surface: #ffffff;
+  --surface-app: #f7fafb;
   --surface-muted: #e2e6e8;
   --surface-subtle: #dde5e9;
   --primary: #075575;
@@ -22,6 +23,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
+  --color-surface-app: var(--surface-app);
   --color-surface-muted: var(--surface-muted);
   --color-surface-subtle: var(--surface-subtle);
   --color-primary: var(--primary);
