@@ -14,7 +14,7 @@ export default function UserDashboardPage() {
       brandTitle="Greyhound Racing NSW"
       navItems={userNavItems}
     >
-      <UserDashboardOverview firstName="John" totalApplications={1} />
+      <UserDashboardOverview firstName="John" totalApplications={10} />
     </DashboardShell>
   );
 }
