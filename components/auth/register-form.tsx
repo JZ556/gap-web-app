@@ -1,4 +1,5 @@
 import { Lock, Mail, User } from "lucide-react";
+import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 
 export function RegisterForm() {
   return (
@@ -81,6 +82,16 @@ export function RegisterForm() {
       <button className="h-12 w-full rounded-sm bg-primary px-5 text-sm font-extrabold text-white transition hover:bg-primary-hover" type="submit">
         Create Account
       </button>
+
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-border" />
+        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">
+          or
+        </span>
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
+      <GoogleAuthButton label="Sign up with Google" />
     </form>
   );
 }

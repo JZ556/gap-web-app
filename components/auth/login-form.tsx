@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Lock, Mail } from "lucide-react";
+import { GoogleAuthButton } from "@/components/auth/google-auth-button";
 
-export function LoginForm() {
+type LoginFormProps = {
+  showGoogleAuth?: boolean;
+};
+
+export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
   return (
     <form className="space-y-6">
       <label className="block">
@@ -42,6 +47,20 @@ export function LoginForm() {
       <button className="h-12 w-full rounded-sm bg-primary px-5 text-sm font-extrabold text-white transition hover:bg-primary-hover" type="submit">
         Login
       </button>
+
+      {showGoogleAuth ? (
+        <>
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">
+              or
+            </span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
+          <GoogleAuthButton label="Continue with Google" />
+        </>
+      ) : null}
     </form>
   );
 }
