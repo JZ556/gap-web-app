@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Lock, Mail } from "lucide-react";
-import { GoogleAuthButton } from "@/components/auth/google-auth-button";
+import { OAuthButton } from "@/components/auth/oauth-button";
 
 type LoginFormProps = {
   showGoogleAuth?: boolean;
@@ -58,7 +58,10 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <GoogleAuthButton label="Continue with Google" />
+          <div className="space-y-3">
+            <OAuthButton label="Continue with Google" />
+            <OAuthButton label="Continue with Microsoft" />
+          </div>
         </>
       ) : null}
     </form>
