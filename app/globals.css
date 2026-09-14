@@ -71,3 +71,12 @@ textarea {
 .help-tip[open] > .help-tip-popover {
   display: block;
 }
+
+.help-tip-right > .help-tip-popover {
+  left: auto;
+  right: 0;
+}
+
+.help-tip-popover {
+  max-width: min(16rem, calc(100vw - 2rem));
+}

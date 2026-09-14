@@ -244,13 +244,14 @@ type FieldMessageProps = {
 };
 
 type HelpTipProps = {
+  align?: "left" | "right";
   children: ReactNode;
   label: string;
 };
 
-function HelpTip({ children, label }: HelpTipProps) {
+function HelpTip({ align = "left", children, label }: HelpTipProps) {
   return (
-    <details className="help-tip relative ml-1 inline-flex align-middle">
+    <details className={"help-tip relative ml-1 inline-flex align-middle " + (align === "right" ? "help-tip-right" : "")}>
       <summary
         aria-label={label}
         className="inline-grid size-4 cursor-pointer list-none place-items-center rounded-full border border-primary/55 bg-white text-[10px] font-extrabold leading-none text-primary transition hover:bg-primary hover:text-white focus-visible:outline-offset-2"
@@ -267,19 +268,20 @@ function HelpTip({ children, label }: HelpTipProps) {
 
 type FieldLabelProps = {
   help?: string;
+  helpAlign?: "left" | "right";
   helpLabel?: string;
   htmlFor: string;
   label: string;
   required?: boolean;
 };
 
-function FieldLabel({ help, helpLabel, htmlFor, label, required = true }: FieldLabelProps) {
+function FieldLabel({ help, helpAlign, helpLabel, htmlFor, label, required = true }: FieldLabelProps) {
   return (
     <label className="block text-sm font-semibold text-primary" htmlFor={htmlFor}>
       <span className="inline-flex items-center">
         {label}
         {required ? <span className="ml-1 text-danger">*</span> : null}
-        {help ? <HelpTip label={helpLabel || `Help for ${label}`}>{help}</HelpTip> : null}
+        {help ? <HelpTip align={helpAlign} label={helpLabel || "Help for " + label}>{help}</HelpTip> : null}
       </span>
     </label>
   );
@@ -308,6 +310,7 @@ type TextFieldProps = {
   error?: string;
   helper?: string;
   help?: string;
+  helpAlign?: "left" | "right";
   helpLabel?: string;
   label: string;
   maxLength?: number;
@@ -325,6 +328,7 @@ function TextField({
   error,
   helper,
   help,
+  helpAlign,
   helpLabel,
   label,
   maxLength,
@@ -341,7 +345,7 @@ function TextField({
 
   return (
     <div className="space-y-2">
-      <FieldLabel help={help} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
+      <FieldLabel help={help} helpAlign={helpAlign} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
       <input
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
@@ -366,6 +370,7 @@ type SelectFieldProps = {
   error?: string;
   helper?: string;
   help?: string;
+  helpAlign?: "left" | "right";
   helpLabel?: string;
   label: string;
   name: FieldName;
@@ -380,6 +385,7 @@ function SelectField({
   error,
   helper,
   help,
+  helpAlign,
   helpLabel,
   label,
   name,
@@ -394,7 +400,7 @@ function SelectField({
 
   return (
     <div className="space-y-2">
-      <FieldLabel help={help} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
+      <FieldLabel help={help} helpAlign={helpAlign} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
       <select
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
@@ -603,7 +609,7 @@ export function NewApplicationForm() {
                   <label className="block text-sm font-semibold text-primary" htmlFor="application-mobile">
                     <span className="inline-flex items-center">
                       Mobile number<span className="ml-1 text-danger">*</span>
-                      <HelpTip label="Help for mobile number">
+                      <HelpTip align="right" label="Help for mobile number">
                         Select the country code, then enter the local number without the country code.
                       </HelpTip>
                     </span>
@@ -746,6 +752,7 @@ export function NewApplicationForm() {
                 <SelectField
                   error={errors.secureYard}
                   help="A secure yard or courtyard helps a greyhound settle safely and exercise at home."
+                  helpAlign="right"
                   helpLabel="Help for secure yard or courtyard"
                   label="Does your home have a securely fenced yard or courtyard?"
                   name="secureYard"
@@ -893,6 +900,7 @@ export function NewApplicationForm() {
                   <SelectField
                     error={errors.hasSeriousConviction}
                     help="This question helps the team assess safety and suitability. Answer honestly."
+                    helpAlign="right"
                     helpLabel="Help for serious conviction question"
                     label="Have you had a serious conviction in the last 10 years?"
                     name="hasSeriousConviction"
