@@ -59,3 +59,15 @@ textarea {
   outline: 2px solid var(--secondary);
   outline-offset: 2px;
 }
+
+.help-tip > summary {
+  list-style: none;
+}
+
+.help-tip > summary::-webkit-details-marker {
+  display: none;
+}
+
+.help-tip[open] > .help-tip-popover {
+  display: block;
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   AlertCircle,
@@ -149,6 +149,33 @@ const initialValues: FormValues = {
   consent: false,
 };
 
+const errorLabels: Partial<Record<FieldName, string>> = {
+  firstName: "First name",
+  lastName: "Last name",
+  email: "Email address",
+  mobile: "Mobile number",
+  bestCallTime: "Best time to call",
+  address: "Residential address",
+  suburb: "Suburb or town",
+  state: "State or territory",
+  postcode: "Postcode",
+  residenceType: "Type of residence",
+  ownership: "Home ownership",
+  landlordPermission: "Permission to keep a large dog",
+  secureYard: "Secure yard or courtyard",
+  hoursAlone: "Time home alone",
+  household: "Household",
+  hasPets: "Current pets",
+  petDetails: "Current pet details",
+  childrenUnder15: "Children under 15",
+  experience: "Dog experience",
+  greyhoundPreferences: "Greyhound preferences",
+  referralSource: "How you heard about Greyhound as Pets",
+  hasSeriousConviction: "Serious conviction",
+  reasonsForAdopting: "Reason for adopting",
+  consent: "Prototype data notice",
+};
+
 function validateForm(values: FormValues): FormErrors {
   const errors: FormErrors = {};
 
@@ -187,7 +214,7 @@ function validateForm(values: FormValues): FormErrors {
   }
 
   if (values.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-    errors.email = "Enter a valid email address, e.g. jordan@example.com.";
+    errors.email = "Enter an email address in a valid format.";
   }
 
   const phoneDigits = values.mobile.replace(/\D/g, "");
@@ -196,7 +223,7 @@ function validateForm(values: FormValues): FormErrors {
   }
 
   if (values.postcode.trim() && !/^\d{4}$/.test(values.postcode.trim())) {
-    errors.postcode = "Use a 4-digit Australian postcode, e.g. 2000.";
+    errors.postcode = "Use a 4-digit Australian postcode.";
   }
 
   if (values.ownership === "I rent my residence" && values.landlordPermission !== "Yes") {
@@ -215,6 +242,48 @@ type FieldMessageProps = {
   helper?: string;
   id: string;
 };
+
+type HelpTipProps = {
+  children: ReactNode;
+  label: string;
+};
+
+function HelpTip({ children, label }: HelpTipProps) {
+  return (
+    <details className="help-tip relative ml-1 inline-flex align-middle">
+      <summary
+        aria-label={label}
+        className="inline-grid size-4 cursor-pointer list-none place-items-center rounded-full border border-primary/55 bg-white text-[10px] font-extrabold leading-none text-primary transition hover:bg-primary hover:text-white focus-visible:outline-offset-2"
+        title={label}
+      >
+        ?
+      </summary>
+      <div className="help-tip-popover absolute left-0 top-6 z-30 hidden w-64 rounded-sm border border-border bg-white p-3 text-xs font-normal leading-5 text-foreground shadow-lg">
+        {children}
+      </div>
+    </details>
+  );
+}
+
+type FieldLabelProps = {
+  help?: string;
+  helpLabel?: string;
+  htmlFor: string;
+  label: string;
+  required?: boolean;
+};
+
+function FieldLabel({ help, helpLabel, htmlFor, label, required = true }: FieldLabelProps) {
+  return (
+    <label className="block text-sm font-semibold text-primary" htmlFor={htmlFor}>
+      <span className="inline-flex items-center">
+        {label}
+        {required ? <span className="ml-1 text-danger">*</span> : null}
+        {help ? <HelpTip label={helpLabel || `Help for ${label}`}>{help}</HelpTip> : null}
+      </span>
+    </label>
+  );
+}
 
 function FieldMessages({ error, helper, id }: FieldMessageProps) {
   return (
@@ -238,6 +307,8 @@ type TextFieldProps = {
   autoComplete?: string;
   error?: string;
   helper?: string;
+  help?: string;
+  helpLabel?: string;
   label: string;
   maxLength?: number;
   name: FieldName;
@@ -253,6 +324,8 @@ function TextField({
   autoComplete,
   error,
   helper,
+  help,
+  helpLabel,
   label,
   maxLength,
   name,
@@ -268,10 +341,7 @@ function TextField({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-primary" htmlFor={id}>
-        {label}
-        {required ? <span className="ml-1 text-danger">*</span> : null}
-      </label>
+      <FieldLabel help={help} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
       <input
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
@@ -295,6 +365,8 @@ function TextField({
 type SelectFieldProps = {
   error?: string;
   helper?: string;
+  help?: string;
+  helpLabel?: string;
   label: string;
   name: FieldName;
   onBlur: () => void;
@@ -307,6 +379,8 @@ type SelectFieldProps = {
 function SelectField({
   error,
   helper,
+  help,
+  helpLabel,
   label,
   name,
   onBlur,
@@ -320,10 +394,7 @@ function SelectField({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-primary" htmlFor={id}>
-        {label}
-        {required ? <span className="ml-1 text-danger">*</span> : null}
-      </label>
+      <FieldLabel help={help} helpLabel={helpLabel} htmlFor={id} label={label} required={required} />
       <select
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
@@ -423,6 +494,9 @@ export function NewApplicationForm() {
   };
 
   const errorCount = Object.keys(errors).length;
+  const errorEntries = (Object.entries(errors) as Array<[FieldName, string]>).filter(([, message]) =>
+    Boolean(message),
+  );
 
   return (
     <section className="mx-auto max-w-6xl">
@@ -443,7 +517,7 @@ export function NewApplicationForm() {
             <div>
               <p className="font-extrabold text-danger">Before you begin</p>
               <p className="mt-1 leading-6">
-                Fields marked <span className="font-bold text-danger">*</span> are required. Red help messages will appear when something needs attention. Please use your current residential details and tell us about everyone and every pet in the home.
+                Fields marked <span className="font-bold text-danger">*</span> are required. Use the help icons beside selected labels when you need more detail.
               </p>
             </div>
           </div>
@@ -457,8 +531,17 @@ export function NewApplicationForm() {
                     Please check {errorCount === 1 ? "the highlighted field" : `${errorCount} highlighted fields`}.
                   </h2>
                   <p className="mt-1 text-sm leading-6 text-foreground/75">
-                    We cannot submit the application until the required details are complete.
+                    Select an item below to jump to the field that needs attention.
                   </p>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-5 text-danger">
+                    {errorEntries.map(([field, message]) => (
+                      <li key={field}>
+                        <a className="font-semibold underline decoration-danger/50 underline-offset-2 hover:decoration-danger" href={"#application-" + field}>
+                          {errorLabels[field] || message}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
@@ -508,7 +591,6 @@ export function NewApplicationForm() {
                 <TextField
                   autoComplete="email"
                   error={errors.email}
-                  helper="We will use this to confirm your application and contact you about matching."
                   label="Email address"
                   name="email"
                   onBlur={() => validateField("email")}
@@ -519,7 +601,12 @@ export function NewApplicationForm() {
                 />
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-primary" htmlFor="application-mobile">
-                    Mobile number<span className="ml-1 text-danger">*</span>
+                    <span className="inline-flex items-center">
+                      Mobile number<span className="ml-1 text-danger">*</span>
+                      <HelpTip label="Help for mobile number">
+                        Select the country code, then enter the local number without the country code.
+                      </HelpTip>
+                    </span>
                   </label>
                   <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.6fr)] gap-2">
                     <select
@@ -553,7 +640,7 @@ export function NewApplicationForm() {
                   </div>
                   <FieldMessages
                     error={errors.mobile}
-                    helper="Choose your country prefix first. Example: Australia +61, then 0400 000 000."
+                    helper="Select the country code, then enter the local number."
                     id="application-mobile"
                   />
                 </div>
@@ -582,12 +669,14 @@ export function NewApplicationForm() {
                   <TextField
                     autoComplete="street-address"
                     error={errors.address}
-                    helper="Example: 10 Barrack Street. Include your house or unit number and street name."
+                    helper="Example: 10 Barrack Street"
+                    help="Include your house or unit number and street name."
+                    helpLabel="Help for residential address"
                     label="Residential address"
                     name="address"
                     onBlur={() => validateField("address")}
                     onChange={handleInputChange}
-                    placeholder="e.g. 10 Barrack Street"
+                    placeholder="House/unit number and street name"
                     value={values.address}
                   />
                 </div>
@@ -599,7 +688,7 @@ export function NewApplicationForm() {
                   name="suburb"
                   onBlur={() => validateField("suburb")}
                   onChange={handleInputChange}
-                  placeholder="e.g. Sydney"
+                  placeholder="Suburb or town"
                   value={values.suburb}
                 />
                 <SelectField
@@ -620,7 +709,7 @@ export function NewApplicationForm() {
                   name="postcode"
                   onBlur={() => validateField("postcode")}
                   onChange={handleInputChange}
-                  placeholder="e.g. 2000"
+                  placeholder="4 digits"
                   value={values.postcode}
                 />
                 <SelectField
@@ -656,7 +745,8 @@ export function NewApplicationForm() {
                 ) : null}
                 <SelectField
                   error={errors.secureYard}
-                  helper="A secure yard or courtyard is important. If you select No, our team will discuss your setup."
+                  help="A secure yard or courtyard helps a greyhound settle safely and exercise at home."
+                  helpLabel="Help for secure yard or courtyard"
                   label="Does your home have a securely fenced yard or courtyard?"
                   name="secureYard"
                   onBlur={() => validateField("secureYard")}
@@ -802,7 +892,8 @@ export function NewApplicationForm() {
                   />
                   <SelectField
                     error={errors.hasSeriousConviction}
-                    helper="Answer honestly so our team can assess the application fairly and safely."
+                    help="This question helps the team assess safety and suitability. Answer honestly."
+                    helpLabel="Help for serious conviction question"
                     label="Have you had a serious conviction in the last 10 years?"
                     name="hasSeriousConviction"
                     onBlur={() => validateField("hasSeriousConviction")}
