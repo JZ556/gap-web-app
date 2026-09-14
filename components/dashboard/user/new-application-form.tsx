@@ -36,6 +36,7 @@ type FieldProps = {
   autoComplete?: string;
   label: string;
   name: string;
+  placeholder?: string;
   required?: boolean;
   type?: string;
 };
@@ -44,6 +45,7 @@ function TextField({
   autoComplete,
   label,
   name,
+  placeholder,
   required = true,
   type = "text",
 }: FieldProps) {
@@ -57,6 +59,7 @@ function TextField({
         autoComplete={autoComplete}
         className="mt-2 h-11 w-full rounded-sm border border-border bg-white px-3 text-sm outline-none transition focus:border-primary"
         name={name}
+        placeholder={placeholder}
         required={required}
         type={type}
       />
@@ -108,20 +111,20 @@ export function NewApplicationForm() {
 
       <form className="space-y-8 p-6 sm:p-8">
         <div className="grid gap-5 md:grid-cols-2">
-          <TextField autoComplete="given-name" label="First Name" name="firstName" />
-          <TextField autoComplete="family-name" label="Last Name" name="lastName" />
-          <TextField autoComplete="email" label="Email" name="email" type="email" />
-          <TextField autoComplete="tel" label="Mobile" name="mobile" type="tel" />
+          <TextField autoComplete="given-name" label="First Name" name="firstName" placeholder="e.g. Jordan" />
+          <TextField autoComplete="family-name" label="Last Name" name="lastName" placeholder="e.g. Smith" />
+          <TextField autoComplete="email" label="Email" name="email" placeholder="e.g. jordan@example.com" type="email" />
+          <TextField autoComplete="tel" label="Mobile" name="mobile" placeholder="e.g. 0400 000 000" type="tel" />
           <SelectField label="When is the best time to call you?" name="bestCallTime" options={callTimeOptions} />
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
           <div className="md:col-span-2">
-            <TextField autoComplete="street-address" label="Address" name="address" />
+            <TextField autoComplete="street-address" label="Address" name="address" placeholder="Street address only, e.g. 10 Barrack Street" />
           </div>
-          <TextField autoComplete="address-level2" label="Suburb" name="suburb" />
+          <TextField autoComplete="address-level2" label="Suburb" name="suburb" placeholder="e.g. Sydney" />
           <SelectField label="State" name="state" options={stateOptions} />
-          <TextField autoComplete="postal-code" label="Postcode" name="postcode" />
+          <TextField autoComplete="postal-code" label="Postcode" name="postcode" placeholder="e.g. 2000" />
           <SelectField label="Do you have any pets?" name="hasPets" options={["No", "Yes"]} />
           <SelectField label="How many children under 15 years are living with you?" name="childrenUnder15" options={childrenOptions} />
         </div>
@@ -140,6 +143,7 @@ export function NewApplicationForm() {
             <textarea
               className="mt-2 min-h-32 w-full rounded-sm border border-border bg-white px-3 py-3 text-sm outline-none transition focus:border-primary"
               name="additionalComments"
+              placeholder="Optional notes about your household, lifestyle, or greyhound preferences."
             />
           </label>
         </div>
