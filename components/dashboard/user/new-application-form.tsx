@@ -350,7 +350,7 @@ function TextField({
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
         autoComplete={autoComplete}
-        className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${error ? "border-danger bg-danger/[.02]" : "border-border"}`}
+        className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${error ? "border-danger bg-danger/2" : "border-border"}`}
         id={id}
         maxLength={maxLength}
         name={name}
@@ -404,7 +404,7 @@ function SelectField({
       <select
         aria-describedby={describedBy}
         aria-invalid={Boolean(error)}
-        className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-secondary/20 ${value ? "" : "text-foreground/55"} ${error ? "border-danger bg-danger/[.02]" : "border-border"}`}
+        className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-secondary/20 ${value ? "" : "text-foreground/55"} ${error ? "border-danger bg-danger/2" : "border-border"}`}
         id={id}
         name={name}
         onBlur={onBlur}
@@ -518,7 +518,7 @@ export function NewApplicationForm() {
         </div>
 
         <div className="space-y-6 p-5 sm:p-8">
-          <div className="flex items-start gap-3 rounded-md border border-danger/35 bg-danger/[.04] p-4 text-sm text-foreground/80" role="note">
+          <div className="flex items-start gap-3 rounded-md border border-danger/35 bg-danger/4 p-4 text-sm text-foreground/80" role="note">
             <CircleHelp aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-danger" strokeWidth={2.2} />
             <div>
               <p className="font-extrabold text-danger">Before you begin</p>
@@ -529,7 +529,7 @@ export function NewApplicationForm() {
           </div>
 
           {errorCount > 0 ? (
-            <div className="rounded-md border border-danger/45 bg-danger/[.05] p-4" id="application-error-summary" role="alert">
+            <div className="rounded-md border border-danger/45 bg-danger/5 p-4" id="application-error-summary" role="alert">
               <div className="flex items-start gap-3">
                 <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-danger" strokeWidth={2.4} />
                 <div>
@@ -632,7 +632,7 @@ export function NewApplicationForm() {
                       aria-describedby={`application-mobile-help${errors.mobile ? " application-mobile-error" : ""}`}
                       aria-invalid={Boolean(errors.mobile)}
                       autoComplete="tel-national"
-                      className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.mobile ? "border-danger bg-danger/[.02]" : "border-border"}`}
+                      className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.mobile ? "border-danger bg-danger/2" : "border-border"}`}
                       id="application-mobile"
                       inputMode="tel"
                       name="mobile"
@@ -778,7 +778,7 @@ export function NewApplicationForm() {
                   <textarea
                     aria-describedby={`application-household-help${errors.household ? " application-household-error" : ""}`}
                     aria-invalid={Boolean(errors.household)}
-                    className={`min-h-28 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.household ? "border-danger bg-danger/[.02]" : "border-border"}`}
+                    className={`min-h-28 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.household ? "border-danger bg-danger/2" : "border-border"}`}
                     id="application-household"
                     name="household"
                     onBlur={() => validateField("household")}
@@ -816,7 +816,7 @@ export function NewApplicationForm() {
                     <textarea
                       aria-describedby={`application-petDetails-help${errors.petDetails ? " application-petDetails-error" : ""}`}
                       aria-invalid={Boolean(errors.petDetails)}
-                      className={`min-h-28 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.petDetails ? "border-danger bg-danger/[.02]" : "border-border"}`}
+                      className={`min-h-28 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.petDetails ? "border-danger bg-danger/2" : "border-border"}`}
                       id="application-petDetails"
                       name="petDetails"
                       onBlur={() => validateField("petDetails")}
@@ -857,7 +857,7 @@ export function NewApplicationForm() {
                     <textarea
                       aria-describedby={`application-greyhoundPreferences-help${errors.greyhoundPreferences ? " application-greyhoundPreferences-error" : ""}`}
                       aria-invalid={Boolean(errors.greyhoundPreferences)}
-                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.greyhoundPreferences ? "border-danger bg-danger/[.02]" : "border-border"}`}
+                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.greyhoundPreferences ? "border-danger bg-danger/2" : "border-border"}`}
                       id="application-greyhoundPreferences"
                       name="greyhoundPreferences"
                       onBlur={() => validateField("greyhoundPreferences")}
@@ -875,7 +875,7 @@ export function NewApplicationForm() {
                     <textarea
                       aria-describedby={`application-reasonsForAdopting-help${errors.reasonsForAdopting ? " application-reasonsForAdopting-error" : ""}`}
                       aria-invalid={Boolean(errors.reasonsForAdopting)}
-                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.reasonsForAdopting ? "border-danger bg-danger/[.02]" : "border-border"}`}
+                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.reasonsForAdopting ? "border-danger bg-danger/2" : "border-border"}`}
                       id="application-reasonsForAdopting"
                       name="reasonsForAdopting"
                       onBlur={() => validateField("reasonsForAdopting")}
