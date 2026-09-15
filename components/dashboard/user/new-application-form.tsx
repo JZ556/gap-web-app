@@ -19,20 +19,6 @@ const callTimeOptions = [
   "Afternoon 2pm - 6pm",
 ] as const;
 
-const countryCodeOptions = [
-  { label: "Australia", value: "+61" },
-  { label: "New Zealand", value: "+64" },
-  { label: "United Kingdom", value: "+44" },
-  { label: "United States", value: "+1" },
-  { label: "Canada", value: "+1" },
-  { label: "Singapore", value: "+65" },
-  { label: "Hong Kong", value: "+852" },
-  { label: "India", value: "+91" },
-  { label: "Philippines", value: "+63" },
-  { label: "South Africa", value: "+27" },
-  { label: "Ireland", value: "+353" },
-] as const;
-
 const stateOptions = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"] as const;
 
 const childrenOptions = ["0", "1", "2", "3", "4", "5+"] as const;
@@ -92,7 +78,6 @@ type FormValues = {
   firstName: string;
   lastName: string;
   email: string;
-  phoneCountryCode: string;
   mobile: string;
   bestCallTime: string;
   address: string;
@@ -124,7 +109,6 @@ const initialValues: FormValues = {
   firstName: "",
   lastName: "",
   email: "",
-  phoneCountryCode: "+61",
   mobile: "",
   bestCallTime: "",
   address: "",
@@ -218,8 +202,8 @@ function validateForm(values: FormValues): FormErrors {
   }
 
   const phoneDigits = values.mobile.replace(/\D/g, "");
-  if (values.mobile.trim() && (phoneDigits.length < 6 || phoneDigits.length > 15)) {
-    errors.mobile = "Use 6–15 digits; spaces and brackets are fine.";
+  if (values.mobile.trim() && !/^04\d{8}$/.test(phoneDigits)) {
+    errors.mobile = "Use an Australian mobile number, for example 0400 000 000.";
   }
 
   if (values.postcode.trim() && !/^\d{4}$/.test(values.postcode.trim())) {
@@ -605,51 +589,21 @@ export function NewApplicationForm() {
                   type="email"
                   value={values.email}
                 />
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-primary" htmlFor="application-mobile">
-                    <span className="inline-flex items-center">
-                      Mobile number<span className="ml-1 text-danger">*</span>
-                      <HelpTip align="right" label="Help for mobile number">
-                        Select the country code, then enter the local number without the country code.
-                      </HelpTip>
-                    </span>
-                  </label>
-                  <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.6fr)] gap-2">
-                    <select
-                      aria-label="Country calling code"
-                      className="h-12 w-full rounded-sm border border-border bg-white px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-secondary/20"
-                      name="phoneCountryCode"
-                      onChange={handleSelectChange}
-                      value={values.phoneCountryCode}
-                    >
-                      {countryCodeOptions.map((option) => (
-                        <option key={`${option.label}-${option.value}`} value={option.value}>
-                          {option.label} {option.value}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      aria-describedby={`application-mobile-help${errors.mobile ? " application-mobile-error" : ""}`}
-                      aria-invalid={Boolean(errors.mobile)}
-                      autoComplete="tel-national"
-                      className={`h-12 w-full rounded-sm border bg-white px-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.mobile ? "border-danger bg-danger/2" : "border-border"}`}
-                      id="application-mobile"
-                      inputMode="tel"
-                      name="mobile"
-                      onBlur={() => validateField("mobile")}
-                      onChange={handleInputChange}
-                      placeholder="0400 000 000"
-                      required
-                      type="tel"
-                      value={values.mobile}
-                    />
-                  </div>
-                  <FieldMessages
-                    error={errors.mobile}
-                    helper="Select the country code, then enter the local number."
-                    id="application-mobile"
-                  />
-                </div>
+                <TextField
+                  autoComplete="tel-national"
+                  error={errors.mobile}
+                  helper="Use an Australian mobile number. Spaces are fine."
+                  help="This adoption program is Australia-focused, so applicants should provide an Australian mobile number."
+                  helpAlign="right"
+                  helpLabel="Help for mobile number"
+                  label="Mobile number"
+                  name="mobile"
+                  onBlur={() => validateField("mobile")}
+                  onChange={handleInputChange}
+                  placeholder="0400 000 000"
+                  type="tel"
+                  value={values.mobile}
+                />
                 <SelectField
                   error={errors.bestCallTime}
                   helper="A coordinator will call within the selected window where possible."
