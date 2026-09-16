@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import type { ReactNode } from "react";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en-AU" className={`${openSans.variable} h-full`}>
       <body className="min-h-full bg-background font-sans text-foreground antialiased">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
