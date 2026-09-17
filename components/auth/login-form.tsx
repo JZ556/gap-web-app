@@ -3,6 +3,7 @@ import { Lock, Mail } from "lucide-react";
 import { OAuthButton } from "@/components/auth/oauth-button";
 
 type LoginFormProps = {
+  destination: "/dashboard" | "/admin";
   showGoogleAuth?: boolean;
 };
 
