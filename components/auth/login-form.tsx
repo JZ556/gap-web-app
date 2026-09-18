@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { FirebaseError } from "firebase/app";
 import Link from "next/link";
 import { Lock, Mail } from "lucide-react";
@@ -13,12 +13,12 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
-  const { login } = useAuth();
+  const { login } = useAuth();  
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (submitting) return;
 
