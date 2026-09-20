@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProfileRole {
+  USER
+  ADMIN
+}
+
+model Profile {
+  firebaseUid String      @id @map("firebase_uid")
+  email       String      @unique
+  firstName   String?     @map("first_name")
+  lastName    String?     @map("last_name")
+  role        ProfileRole @default(USER)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@map("profiles")
+}
