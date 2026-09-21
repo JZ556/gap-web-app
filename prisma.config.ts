@@ -3,10 +3,10 @@ import { defineConfig } from "prisma/config";
 
 config({ path: ".env.local" });
 
-const databaseUrl = process.env.DATABASE_URL;
+const directDatabaseUrl = process.env.DIRECT_DATABASE_URL;
 
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required in .env.local.");
+if (!directDatabaseUrl) {
+  throw new Error("DIRECT_DATABASE_URL is required in .env.local.");
 }
 
 export default defineConfig({
@@ -15,6 +15,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: databaseUrl,
+    url: directDatabaseUrl,
   },
 });
