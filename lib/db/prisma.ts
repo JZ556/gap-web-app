@@ -3,7 +3,7 @@ import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as typeof globalThis & {
   prisma?: PrismaClient;
-};
+}; 
 
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
