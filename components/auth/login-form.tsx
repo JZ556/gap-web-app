@@ -3,6 +3,7 @@
 import { useState, type SubmitEvent } from "react";
 import { FirebaseError } from "firebase/app";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Lock, Mail } from "lucide-react";
 import { OAuthButton } from "@/components/auth/oauth-button";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -12,11 +13,11 @@ type LoginFormProps = {
   showGoogleAuth?: boolean;
 };
 
-export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
-  const { login } = useAuth();  
+export function LoginForm({ destination, showGoogleAuth = true }: LoginFormProps) {
+  const router = useRouter();
+  const { login } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,11 +29,10 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
 
     setSubmitting(true);
     setError(null);
-    setSuccess(false);
 
     try {
       await login(email, password);
-      setSuccess(true);
+      router.replace(destination);
     } catch (cause) {
       if (cause instanceof FirebaseError) {
         switch (cause.code) {
@@ -105,7 +105,6 @@ export function LoginForm({ showGoogleAuth = true }: LoginFormProps) {
 
       <div aria-live="polite" role={error ? "alert" : "status"}>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        {success ? <p className="text-sm text-green-700">Signed in successfully.</p> : null}
       </div>
 
       {showGoogleAuth ? (
