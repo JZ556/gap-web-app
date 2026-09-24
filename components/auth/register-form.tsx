@@ -29,6 +29,11 @@ export function RegisterForm() {
       return;
     }
 
+    if (password.length < 6 || password.length > 4096 || !/\d/.test(password)) {
+      setError("Password must be 6 to 4096 characters and include a number.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -129,14 +134,19 @@ export function RegisterForm() {
         <span className="mt-2 flex h-12 items-center gap-3 border border-border bg-white px-4 text-foreground/70 focus-within:border-primary">
           <Lock aria-hidden="true" className="size-5 shrink-0" />
           <input
+            aria-describedby="password-requirements"
             autoComplete="new-password"
             className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-foreground/50"
+            maxLength={4096}
             minLength={6}
             name="password"
             placeholder="Enter your password"
             required
             type="password"
           />
+        </span>
+        <span id="password-requirements" className="mt-2 block text-xs text-foreground/60">
+          Minimum 6 characters, including at least one number.
         </span>
       </label>
 
@@ -149,6 +159,7 @@ export function RegisterForm() {
           <input
             autoComplete="new-password"
             className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-foreground/50"
+            maxLength={4096}
             minLength={6}
             name="confirmPassword"
             placeholder="Confirm your password"
