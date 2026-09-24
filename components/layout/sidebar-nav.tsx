@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 export type SidebarNavItem = {
   href: string;
@@ -34,13 +34,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
       </div>
 
       <div className="mt-auto p-4">
-        <button
-          className="flex min-h-11 w-full items-center gap-3 rounded-sm px-3 py-2 text-sm font-semibold text-foreground/70 transition hover:bg-surface-app hover:text-primary"
-          type="button"
-        >
-          <LogOut aria-hidden="true" className="size-5 shrink-0" />
-          <span>Logout</span>
-        </button>
+        <LogoutButton />
       </div>
     </nav>
   );
