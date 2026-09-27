@@ -42,11 +42,33 @@ export function RegisterForm() {
     setSubmitting(true);
     setError(null);
 
+    let firebaseAccountCreated = false;
+
     try {
-      await register(email, password);
+      const credential = await register(email, password);
+      firebaseAccountCreated = true;
+
+      const idToken = await credential.user.getIdToken();
+      const response = await fetch("/api/auth/profile", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Profile creation failed.");
+      }
+
       router.replace("/dashboard");
     } catch (cause) {
-      if (cause instanceof FirebaseError) {
+      if (firebaseAccountCreated) {
+        setError(
+          "Your sign-in was created, but profile setup failed. Please try again later.",
+        );
+      } else if (cause instanceof FirebaseError) {
         switch (cause.code) {
           case "auth/email-already-in-use":
             setError("An account already exists for this email address.");
