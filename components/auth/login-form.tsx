@@ -13,9 +13,27 @@ type LoginFormProps = {
   showGoogleAuth?: boolean;
 };
 
+type ProfileRole = "USER" | "ADMIN";
+
+class LoginFlowError extends Error {}
+
+function readProfileRole(value: unknown): ProfileRole | null {
+  if (typeof value !== "object" || value === null || !("profile" in value)) {
+    return null;
+  }
+
+  const profile = value.profile;
+
+  if (typeof profile !== "object" || profile === null || !("role" in profile)) {
+    return null;
+  }
+
+  return profile.role === "USER" || profile.role === "ADMIN" ? profile.role : null;
+}
+
 export function LoginForm({ destination, showGoogleAuth = true }: LoginFormProps) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,11 +48,54 @@ export function LoginForm({ destination, showGoogleAuth = true }: LoginFormProps
     setSubmitting(true);
     setError(null);
 
+    let firebaseSignedIn = false;
+
     try {
-      await login(email, password);
-      router.replace(destination);
+      const credential = await login(email, password);
+      firebaseSignedIn = true;
+
+      const idToken = await credential.user.getIdToken();
+      const response = await fetch("/api/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      });
+
+      if (response.status === 404) {
+        throw new LoginFlowError("Your account profile has not been set up.");
+      }
+
+      if (!response.ok) {
+        throw new LoginFlowError(
+          "Could not verify your account access. Please try again.",
+        );
+      }
+
+      const role = readProfileRole(await response.json());
+
+      if (!role) {
+        throw new LoginFlowError("The account profile response was invalid.");
+      }
+
+      if (destination === "/admin" && role !== "ADMIN") {
+        await logout();
+        firebaseSignedIn = false;
+        throw new LoginFlowError("This account does not have staff access.");
+      }
+
+      router.replace(role === "ADMIN" ? "/admin" : "/dashboard");
     } catch (cause) {
-      if (cause instanceof FirebaseError) {
+      if (firebaseSignedIn) {
+        try {
+          await logout();
+        } catch {
+          // Keep the original login error as the message shown to the user.
+        }
+      }
+
+      if (cause instanceof LoginFlowError) {
+        setError(cause.message);
+      } else if (cause instanceof FirebaseError) {
         switch (cause.code) {
           case "auth/invalid-credential":
           case "auth/user-not-found":
