@@ -31,20 +31,6 @@ const residenceOptions = [
   "Rural property",
 ] as const;
 
-const ownershipOptions = [
-  "I own my residence",
-  "I rent my residence",
-  "I live with family or another household",
-] as const;
-
-const hoursAloneOptions = [
-  "Less than 2 hours",
-  "2 - 4 hours",
-  "4 - 6 hours",
-  "6 - 8 hours",
-  "More than 8 hours",
-] as const;
-
 const experienceOptions = [
   "I am new to greyhounds",
   "I have owned other dogs",
@@ -85,19 +71,13 @@ type FormValues = {
   state: string;
   postcode: string;
   residenceType: string;
-  ownership: string;
-  landlordPermission: string;
   secureYard: string;
-  hoursAlone: string;
-  household: string;
   hasPets: string;
   petDetails: string;
   childrenUnder15: string;
   experience: string;
-  greyhoundPreferences: string;
   referralSource: string;
   hasSeriousConviction: string;
-  reasonsForAdopting: string;
   additionalComments: string;
   consent: boolean;
 };
@@ -116,19 +96,13 @@ const initialValues: FormValues = {
   state: "",
   postcode: "",
   residenceType: "",
-  ownership: "",
-  landlordPermission: "",
   secureYard: "",
-  hoursAlone: "",
-  household: "",
   hasPets: "",
   petDetails: "",
   childrenUnder15: "",
   experience: "",
-  greyhoundPreferences: "",
   referralSource: "",
   hasSeriousConviction: "",
-  reasonsForAdopting: "",
   additionalComments: "",
   consent: false,
 };
@@ -144,19 +118,13 @@ const errorLabels: Partial<Record<FieldName, string>> = {
   state: "State or territory",
   postcode: "Postcode",
   residenceType: "Type of residence",
-  ownership: "Home ownership",
-  landlordPermission: "Permission to keep a large dog",
   secureYard: "Secure yard or courtyard",
-  hoursAlone: "Time home alone",
-  household: "Household",
   hasPets: "Current pets",
   petDetails: "Current pet details",
   childrenUnder15: "Children under 15",
   experience: "Dog experience",
-  greyhoundPreferences: "Greyhound preferences",
   referralSource: "How you heard about Greyhound as Pets",
   hasSeriousConviction: "Serious conviction",
-  reasonsForAdopting: "Reason for adopting",
   consent: "Prototype data notice",
 };
 
@@ -174,17 +142,12 @@ function validateForm(values: FormValues): FormErrors {
     ["state", "Choose your state or territory."],
     ["postcode", "Enter your postcode."],
     ["residenceType", "Choose your type of residence."],
-    ["ownership", "Tell us whether you own or rent your home."],
     ["secureYard", "Tell us whether your yard is secure."],
-    ["hoursAlone", "Choose how long the greyhound may be home alone."],
-    ["household", "Tell us who will share the home with your greyhound."],
     ["hasPets", "Tell us whether you have any pets."],
     ["childrenUnder15", "Choose the number of children under 15."],
     ["experience", "Choose the option that best describes your experience."],
-    ["greyhoundPreferences", "Tell us what you are looking for, even if you have no preference."],
     ["referralSource", "Choose how you heard about Greyhound as Pets."],
     ["hasSeriousConviction", "Please choose an option."],
-    ["reasonsForAdopting", "Tell us why you would like to adopt a retired greyhound."],
   ];
 
   for (const [field, message] of requiredMessages) {
@@ -208,10 +171,6 @@ function validateForm(values: FormValues): FormErrors {
 
   if (values.postcode.trim() && !/^\d{4}$/.test(values.postcode.trim())) {
     errors.postcode = "Use a 4-digit Australian postcode.";
-  }
-
-  if (values.ownership === "I rent my residence" && values.landlordPermission !== "Yes") {
-    errors.landlordPermission = "Please confirm that you have landlord or strata permission.";
   }
 
   if (values.hasPets === "Yes" && !values.petDetails.trim()) {
@@ -622,7 +581,7 @@ export function NewApplicationForm() {
                 description="These details help us assess safety, space and the kind of support your home can offer."
                 icon={Home}
                 number="2"
-                title="Your home and household"
+                title="Your home"
               />
               <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-8">
                 <div className="sm:col-span-2">
@@ -683,27 +642,6 @@ export function NewApplicationForm() {
                   value={values.residenceType}
                 />
                 <SelectField
-                  error={errors.ownership}
-                  label="Do you own or rent your home?"
-                  name="ownership"
-                  onBlur={() => validateField("ownership")}
-                  onChange={handleSelectChange}
-                  options={ownershipOptions}
-                  value={values.ownership}
-                />
-                {values.ownership === "I rent my residence" ? (
-                  <SelectField
-                    error={errors.landlordPermission}
-                    helper="Written landlord or strata permission may be requested during review."
-                    label="Do you have permission to keep a large dog?"
-                    name="landlordPermission"
-                    onBlur={() => validateField("landlordPermission")}
-                    onChange={handleSelectChange}
-                    options={["Yes", "No"]}
-                    value={values.landlordPermission}
-                  />
-                ) : null}
-                <SelectField
                   error={errors.secureYard}
                   help="A secure yard or courtyard helps a greyhound settle safely and exercise at home."
                   helpAlign="right"
@@ -715,34 +653,6 @@ export function NewApplicationForm() {
                   options={["Yes", "No"]}
                   value={values.secureYard}
                 />
-                <SelectField
-                  error={errors.hoursAlone}
-                  helper="Think about a normal weekday, not a one-off exception."
-                  label="How long might your greyhound be home alone?"
-                  name="hoursAlone"
-                  onBlur={() => validateField("hoursAlone")}
-                  onChange={handleSelectChange}
-                  options={hoursAloneOptions}
-                  value={values.hoursAlone}
-                />
-                <div className="space-y-2 sm:col-span-2">
-                  <label className="block text-sm font-semibold text-primary" htmlFor="application-household">
-                    Who will your greyhound share their home with?<span className="ml-1 text-danger">*</span>
-                  </label>
-                  <textarea
-                    aria-describedby={`application-household-help${errors.household ? " application-household-error" : ""}`}
-                    aria-invalid={Boolean(errors.household)}
-                    className={`min-h-28 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.household ? "border-danger bg-danger/2" : "border-border"}`}
-                    id="application-household"
-                    name="household"
-                    onBlur={() => validateField("household")}
-                    onChange={(event) => setField("household", event.target.value)}
-                    placeholder="e.g. Two adults and one child aged 10; we are all ready to welcome a greyhound."
-                    required
-                    value={values.household}
-                  />
-                  <FieldMessages error={errors.household} helper="Include names or ages of children and adults where relevant." id="application-household" />
-                </div>
                 <SelectField
                   error={errors.hasPets}
                   helper="This includes dogs, cats, birds and other animals."
@@ -787,10 +697,10 @@ export function NewApplicationForm() {
 
             <section className="overflow-hidden rounded-md border border-border">
               <SectionHeading
-                description="There is no perfect answer. Honest detail helps our team make a safer, more thoughtful match."
+                description="Tell us about your experience and provide the information needed to assess your application."
                 icon={PawPrint}
                 number="3"
-                title="Experience and the right fit"
+                title="Application details"
               />
               <div className="grid gap-6 p-6 sm:p-8">
                 <SelectField
@@ -803,44 +713,6 @@ export function NewApplicationForm() {
                   options={experienceOptions}
                   value={values.experience}
                 />
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-primary" htmlFor="application-greyhoundPreferences">
-                      What are you looking for in a greyhound?<span className="ml-1 text-danger">*</span>
-                    </label>
-                    <textarea
-                      aria-describedby={`application-greyhoundPreferences-help${errors.greyhoundPreferences ? " application-greyhoundPreferences-error" : ""}`}
-                      aria-invalid={Boolean(errors.greyhoundPreferences)}
-                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.greyhoundPreferences ? "border-danger bg-danger/2" : "border-border"}`}
-                      id="application-greyhoundPreferences"
-                      name="greyhoundPreferences"
-                      onBlur={() => validateField("greyhoundPreferences")}
-                      onChange={(event) => setField("greyhoundPreferences", event.target.value)}
-                      placeholder="e.g. We are open to age and sex; a gentle, people-focused dog would suit our home."
-                      required
-                      value={values.greyhoundPreferences}
-                    />
-                    <FieldMessages error={errors.greyhoundPreferences} helper="It is okay to write “no preference”." id="application-greyhoundPreferences" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-primary" htmlFor="application-reasonsForAdopting">
-                      Why would you like to adopt a retired greyhound?<span className="ml-1 text-danger">*</span>
-                    </label>
-                    <textarea
-                      aria-describedby={`application-reasonsForAdopting-help${errors.reasonsForAdopting ? " application-reasonsForAdopting-error" : ""}`}
-                      aria-invalid={Boolean(errors.reasonsForAdopting)}
-                      className={`min-h-32 w-full rounded-sm border bg-white px-3 py-3 text-sm text-foreground outline-none transition placeholder:text-foreground/45 focus:border-primary focus:ring-2 focus:ring-secondary/20 ${errors.reasonsForAdopting ? "border-danger bg-danger/2" : "border-border"}`}
-                      id="application-reasonsForAdopting"
-                      name="reasonsForAdopting"
-                      onBlur={() => validateField("reasonsForAdopting")}
-                      onChange={(event) => setField("reasonsForAdopting", event.target.value)}
-                      placeholder="Tell us what makes this the right time for your family."
-                      required
-                      value={values.reasonsForAdopting}
-                    />
-                    <FieldMessages error={errors.reasonsForAdopting} helper="Share the expectations you have for life with a greyhound." id="application-reasonsForAdopting" />
-                  </div>
-                </div>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <SelectField
                     error={errors.referralSource}
@@ -873,7 +745,7 @@ export function NewApplicationForm() {
                     id="application-additionalComments"
                     name="additionalComments"
                     onChange={(event) => setField("additionalComments", event.target.value)}
-                    placeholder="Anything else about your household, lifestyle or greyhound preferences?"
+                    placeholder="Anything else you would like our adoption team to know?"
                     value={values.additionalComments}
                   />
                 </div>
