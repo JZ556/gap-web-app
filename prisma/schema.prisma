@@ -12,6 +12,21 @@ enum ProfileRole {
   ADMIN
 }
 
+enum ApplicationStatus {
+  PENDING_REVIEW
+  MATCHED
+}
+
+enum GreyhoundStatus {
+  AVAILABLE
+  MATCHED
+}
+
+enum GreyhoundSex {
+  MALE
+  FEMALE
+}
+
 model Profile {
   firebaseUid String      @id @map("firebase_uid")
   email       String      @unique
@@ -21,5 +36,78 @@ model Profile {
   createdAt   DateTime    @default(now()) @map("created_at")
   updatedAt   DateTime    @updatedAt @map("updated_at")
 
+  applications     Application[] @relation("ApplicantApplications")
+  matchesPerformed Match[]       @relation("MatchedBy")
+
   @@map("profiles")
+}
+
+model Application {
+  id                   String            @id @default(uuid()) @db.Uuid
+  applicationNumber    String            @unique @map("application_number")
+  applicantUid         String            @map("applicant_uid")
+  firstName            String            @map("first_name")
+  lastName             String            @map("last_name")
+  email                String
+  mobile               String
+  bestCallTime         String            @map("best_call_time")
+  address              String
+  suburb               String
+  state                String
+  postcode             String
+  residenceType        String            @map("residence_type")
+  hasSecureYard        Boolean           @map("has_secure_yard")
+  hasPets              Boolean           @map("has_pets")
+  petDetails           String?           @map("pet_details")
+  childrenUnder15      Int               @map("children_under_15")
+  experience           String
+  referralSource       String            @map("referral_source")
+  hasSeriousConviction Boolean           @map("has_serious_conviction")
+  additionalComments   String?           @map("additional_comments")
+  status               ApplicationStatus @default(PENDING_REVIEW)
+  submittedAt          DateTime          @default(now()) @map("submitted_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
+
+  applicant Profile @relation("ApplicantApplications", fields: [applicantUid], references: [firebaseUid], onDelete: Restrict)
+  match     Match?
+
+  @@index([applicantUid])
+  @@index([status])
+  @@map("applications")
+}
+
+model Greyhound {
+  id              String          @id @default(uuid()) @db.Uuid
+  name            String
+  ageYears        Int             @map("age_years")
+  ageMonths       Int             @map("age_months")
+  sex             GreyhoundSex
+  microchipNumber String          @unique @map("microchip_number")
+  location        String
+  description     String
+  medicalNotes    String          @map("medical_notes")
+  imageUrl        String          @map("image_url")
+  status          GreyhoundStatus @default(AVAILABLE)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  match Match?
+
+  @@index([status])
+  @@map("greyhounds")
+}
+
+model Match {
+  id            String   @id @default(uuid()) @db.Uuid
+  applicationId String   @unique @map("application_id") @db.Uuid
+  greyhoundId   String   @unique @map("greyhound_id") @db.Uuid
+  matchedByUid  String   @map("matched_by_uid")
+  matchedAt     DateTime @default(now()) @map("matched_at")
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Restrict)
+  greyhound   Greyhound   @relation(fields: [greyhoundId], references: [id], onDelete: Restrict)
+  matchedBy   Profile     @relation("MatchedBy", fields: [matchedByUid], references: [firebaseUid], onDelete: Restrict)
+
+  @@index([matchedByUid])
+  @@map("matches")
 }
