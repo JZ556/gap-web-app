@@ -12,53 +12,15 @@ import {
   Phone,
   ShieldCheck,
 } from "lucide-react";
-
-const callTimeOptions = [
-  "Morning 9am - 12noon",
-  "Lunchtime 12noon - 2pm",
-  "Afternoon 2pm - 6pm",
-] as const;
-
-const stateOptions = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"] as const;
+import {
+  callTimeOptions,
+  experienceOptions,
+  referralOptions,
+  residenceOptions,
+  stateOptions,
+} from "@/lib/validation/application";
 
 const childrenOptions = ["0", "1", "2", "3", "4", "5+"] as const;
-
-const residenceOptions = [
-  "House",
-  "Townhouse",
-  "Apartment",
-  "Unit",
-  "Rural property",
-] as const;
-
-const experienceOptions = [
-  "I am new to greyhounds",
-  "I have owned other dogs",
-  "I have previously cared for a greyhound",
-] as const;
-
-const referralOptions = [
-  "TikTok",
-  "LinkedIn",
-  "Instagram",
-  "Facebook",
-  "Reddit",
-  "Other Social Media",
-  "News Online",
-  "Print Newspaper Article",
-  "Local Newspaper Print",
-  "Radio",
-  "Sports Radio",
-  "Magazine",
-  "Google Ad",
-  "Another Website",
-  "Online Search",
-  "A Friend Who Already Adopted",
-  "National Adoption Day Advertisement",
-  "Royal Easter Show Advertisement",
-  "Pet Shop Adoption Day Event",
-  "Other",
-] as const;
 
 type FormValues = {
   firstName: string;
