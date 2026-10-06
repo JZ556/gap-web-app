@@ -1,9 +1,10 @@
 import Link from "next/link";
 
-type UserApplicationStatus = "matched" | "unmatched" | "withdrawn";
+type UserApplicationStatus = "PENDING_REVIEW" | "MATCHED";
 
 export type UserApplicationRow = {
   id: string;
+  applicationNumber: string;
   status: UserApplicationStatus;
   submittedAt: string;
 };
@@ -13,16 +14,20 @@ type UserApplicationsTableProps = {
 };
 
 const statusLabels: Record<UserApplicationStatus, string> = {
-  matched: "Matched",
-  unmatched: "Pending Review",
-  withdrawn: "Withdrawn",
+  MATCHED: "Matched",
+  PENDING_REVIEW: "Pending Review",
 };
 
 const statusStyles: Record<UserApplicationStatus, string> = {
-  matched: "bg-accent/15 text-primary",
-  unmatched: "bg-callout/35 text-primary",
-  withdrawn: "bg-surface-muted text-foreground/70",
+  MATCHED: "bg-accent/15 text-primary",
+  PENDING_REVIEW: "bg-callout/35 text-primary",
 };
+
+const submittedDateFormatter = new Intl.DateTimeFormat("en-AU", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 
 export function UserApplicationsTable({
   applications,
@@ -69,10 +74,10 @@ export function UserApplicationsTable({
               {applications.map((application) => (
                 <tr className="transition hover:bg-surface-app" key={application.id}>
                   <td className="px-5 py-4 font-semibold text-foreground">
-                    {application.id}
+                    {application.applicationNumber}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
-                    {application.submittedAt}
+                    {submittedDateFormatter.format(new Date(application.submittedAt))}
                   </td>
                   <td className="px-5 py-4">
                     <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${statusStyles[application.status]}`}>
