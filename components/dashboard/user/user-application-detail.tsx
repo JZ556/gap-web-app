@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-type UserApplicationStatus = "matched" | "unmatched" | "withdrawn";
+type UserApplicationStatus = "PENDING_REVIEW" | "MATCHED";
 
 export type UserApplicationDetailData = {
   additionalComments?: string;
   applicantName: string;
   email: string;
-  id: string;
+  applicationNumber: string;
   matchedGreyhoundName?: string;
   mobile: string;
   status: UserApplicationStatus;
@@ -15,24 +15,26 @@ export type UserApplicationDetailData = {
 
 type UserApplicationDetailProps = {
   application: UserApplicationDetailData;
+  onWithdraw?: () => void;
+  isWithdrawing?: boolean;
 };
 
 const statusLabels: Record<UserApplicationStatus, string> = {
-  matched: "Matched",
-  unmatched: "Pending Review",
-  withdrawn: "Withdrawn",
+  MATCHED: "Matched",
+  PENDING_REVIEW: "Pending Review",
 };
 
 const statusStyles: Record<UserApplicationStatus, string> = {
-  matched: "bg-accent/15 text-primary",
-  unmatched: "bg-callout/35 text-primary",
-  withdrawn: "bg-surface-muted text-foreground/70",
+  MATCHED: "bg-accent/15 text-primary",
+  PENDING_REVIEW: "bg-callout/35 text-primary",
 };
 
 export function UserApplicationDetail({
   application,
+  onWithdraw,
+  isWithdrawing = false,
 }: UserApplicationDetailProps) {
-  const canWithdraw = application.status === "unmatched";
+  const canWithdraw = application.status === "PENDING_REVIEW" && onWithdraw;
 
   return (
     <section className="space-y-6">
@@ -51,10 +53,12 @@ export function UserApplicationDetail({
 
         {canWithdraw ? (
           <button
-            className="h-11 rounded-sm border border-danger px-5 text-sm font-extrabold text-danger transition hover:bg-danger hover:text-white"
+            className="h-11 cursor-pointer rounded-sm border border-danger px-5 text-sm font-extrabold text-danger transition hover:bg-danger hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isWithdrawing}
+            onClick={onWithdraw}
             type="button"
           >
-            Withdraw Application
+            {isWithdrawing ? "Withdrawing..." : "Withdraw Application"}
           </button>
         ) : null}
       </div>
@@ -62,7 +66,7 @@ export function UserApplicationDetail({
       <div className="rounded-md border border-border bg-white shadow-sm">
         <dl className="grid divide-y divide-border md:grid-cols-2 md:divide-x md:divide-y-0">
           <div className="space-y-5 p-6">
-            <DetailItem label="Application ID" value={application.id} />
+            <DetailItem label="Application ID" value={application.applicationNumber} />
             <DetailItem label="Applicant Name" value={application.applicantName} />
             <DetailItem label="Date Submitted" value={application.submittedAt} />
             <div>

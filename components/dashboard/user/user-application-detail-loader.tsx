@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
@@ -35,8 +36,11 @@ type UserApplicationDetailLoaderProps = {
 
 export function UserApplicationDetailLoader({ id }: UserApplicationDetailLoaderProps) {
   const { user, loading } = useAuth();
+  const router = useRouter();
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [reloadIndex, setReloadIndex] = useState(0);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [withdrawError, setWithdrawError] = useState<string | null>(null);
 
   useEffect(() => {
     if (loading || !user) return;
@@ -75,12 +79,12 @@ export function UserApplicationDetailLoader({ id }: UserApplicationDetailLoaderP
         setLoadState({
           status: "ready",
           application: {
-            id: application.applicationNumber,
+            applicationNumber: application.applicationNumber,
             applicantName: `${application.firstName} ${application.lastName}`,
             email: application.email,
             mobile: application.mobile,
             additionalComments: application.additionalComments || undefined,
-            status: application.status === "MATCHED" ? "matched" : "unmatched",
+            status: application.status,
             submittedAt: new Date(application.submittedAt).toLocaleDateString("en-AU", {
               day: "2-digit",
               month: "short",
@@ -102,6 +106,43 @@ export function UserApplicationDetailLoader({ id }: UserApplicationDetailLoaderP
     void loadApplication();
     return () => controller.abort();
   }, [id, user, loading, reloadIndex]);
+
+  async function handleWithdraw() {
+    if (!user || isWithdrawing || loadState.status !== "ready" ||
+        loadState.application.status !== "PENDING_REVIEW") return;
+    if (!window.confirm("Withdraw this application? This cannot be undone.")) return;
+
+    setIsWithdrawing(true);
+    setWithdrawError(null);
+
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(`/api/applications/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        router.replace("/applications");
+        return;
+      }
+
+      const result = (await response.json()) as { error?: string };
+      setWithdrawError(
+        response.status === 401
+          ? "Your session has expired. Please sign in again."
+          : result.error || "Could not withdraw this application.",
+      );
+      if (response.status === 409 || response.status === 404) {
+        setLoadState({ status: "loading" });
+        setReloadIndex((current) => current + 1);
+      }
+    } catch (error) {
+      setWithdrawError(error instanceof Error ? error.message : "Could not withdraw this application.");
+    } finally {
+      setIsWithdrawing(false);
+    }
+  }
 
   if (!loading && !user) {
     return (
@@ -161,5 +202,18 @@ export function UserApplicationDetailLoader({ id }: UserApplicationDetailLoaderP
     );
   }
 
-  return <UserApplicationDetail application={loadState.application} />;
+  return (
+    <div className="space-y-4">
+      {withdrawError ? (
+        <p className="rounded-md border border-danger/40 bg-white p-4 text-sm font-semibold text-danger" role="alert">
+          {withdrawError}
+        </p>
+      ) : null}
+      <UserApplicationDetail
+        application={loadState.application}
+        isWithdrawing={isWithdrawing}
+        onWithdraw={handleWithdraw}
+      />
+    </div>
+  );
 }
