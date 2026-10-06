@@ -8,10 +8,12 @@ import {
   CheckCircle2,
   CircleHelp,
   Home,
+  LoaderCircle,
   PawPrint,
   Phone,
   ShieldCheck,
 } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
 import {
   callTimeOptions,
   experienceOptions,
@@ -46,6 +48,12 @@ type FormValues = {
 
 type FieldName = keyof FormValues;
 type FormErrors = Partial<Record<FieldName, string>>;
+
+type CreateApplicationResponse = {
+  application?: { applicationNumber: string };
+  error?: string;
+  issues?: Array<{ field: string; message: string }>;
+};
 
 const initialValues: FormValues = {
   firstName: "",
@@ -359,13 +367,16 @@ function SectionHeading({ description, icon: Icon, number, title }: SectionHeadi
 }
 
 export function NewApplicationForm() {
+  const { user } = useAuth();
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submittedApplicationNumber, setSubmittedApplicationNumber] = useState<string | null>(null);
 
   const setField = (name: FieldName, value: string | boolean) => {
     setValues((current) => ({ ...current, [name]: value }));
-    setSubmitted(false);
+    setSubmitError(null);
     setErrors((current) => {
       if (!current[name]) {
         return current;
@@ -391,17 +402,70 @@ export function NewApplicationForm() {
     setErrors((current) => ({ ...current, [name]: nextErrors[name] }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitting || submittedApplicationNumber) return;
+
     const nextErrors = validateForm(values);
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
-      setSubmitted(false);
       return;
     }
 
-    setSubmitted(true);
+    if (!user) {
+      setSubmitError("Your session has expired. Please sign in again.");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const idToken = await user.getIdToken();
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const result = (await response.json()) as CreateApplicationResponse;
+
+      if (!response.ok) {
+        const fieldErrors: FormErrors = {};
+
+        for (const issue of result.issues ?? []) {
+          if (Object.prototype.hasOwnProperty.call(initialValues, issue.field)) {
+            fieldErrors[issue.field as FieldName] = issue.message;
+          }
+        }
+
+        setErrors(fieldErrors);
+        throw new Error(
+          response.status === 401
+            ? "Your session has expired. Please sign in again."
+            : result.error || "Could not submit the application.",
+        );
+      }
+
+      if (!result.application?.applicationNumber) {
+        throw new Error("We could not confirm whether the application was saved. Please wait before submitting again.");
+      }
+
+      setSubmittedApplicationNumber(result.application.applicationNumber);
+    } catch (error) {
+      setSubmitError(
+        error instanceof TypeError || error instanceof SyntaxError
+          ? "We could not confirm whether the application was saved. Please wait before submitting again."
+          : error instanceof Error
+          ? error.message
+          : "Could not submit the application. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const errorCount = Object.keys(errors).length;
@@ -458,19 +522,37 @@ export function NewApplicationForm() {
             </div>
           ) : null}
 
-          {submitted ? (
+          {submitError ? (
+            <div className="flex items-start gap-3 rounded-md border border-danger/45 bg-danger/5 p-4" role="alert">
+              <AlertCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-danger" strokeWidth={2.4} />
+              <p className="text-sm font-semibold leading-6 text-danger">{submitError}</p>
+            </div>
+          ) : null}
+
+          {submittedApplicationNumber ? (
             <div className="flex items-start gap-3 rounded-md border border-accent/50 bg-accent/10 p-4" role="status">
               <CheckCircle2 aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-primary" strokeWidth={2.3} />
               <div>
-                <p className="font-extrabold text-primary">Application ready for review</p>
+                <p className="font-extrabold text-primary">Application submitted</p>
                 <p className="mt-1 text-sm leading-6 text-foreground/75">
-                  This student prototype has validated your details locally. In a production service, a coordinator would now contact you about the next steps.
+                  Your reference is {submittedApplicationNumber}. Your application is pending review.
                 </p>
+                <button
+                  className="mt-3 text-sm font-semibold text-primary underline underline-offset-2 hover:text-primary-hover"
+                  onClick={() => {
+                    setValues(initialValues);
+                    setErrors({});
+                    setSubmittedApplicationNumber(null);
+                  }}
+                  type="button"
+                >
+                  Submit another application
+                </button>
               </div>
             </div>
           ) : null}
 
-          <form className="space-y-6" noValidate onSubmit={handleSubmit}>
+          <form className={submittedApplicationNumber ? "hidden" : "space-y-6"} noValidate onSubmit={handleSubmit}>
             <section className="overflow-hidden rounded-md border border-border">
               <SectionHeading
                 description="Tell us how we can reach you and when a coordinator should call."
@@ -745,11 +827,12 @@ export function NewApplicationForm() {
                 <p>Your answers help the team make a safe, individual match.</p>
               </div>
               <button
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-sm bg-primary px-7 text-sm font-extrabold text-white transition hover:bg-primary-hover focus-visible:outline-offset-4"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-sm bg-primary px-7 text-sm font-extrabold text-white transition hover:bg-primary-hover focus-visible:outline-offset-4 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={submitting}
                 type="submit"
               >
-                {submitted ? <CheckCircle2 aria-hidden="true" className="size-4" /> : null}
-                {submitted ? "Application validated" : "Submit Application"}
+                {submitting ? <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> : null}
+                {submitting ? "Submitting..." : "Submit Application"}
               </button>
             </div>
           </form>
