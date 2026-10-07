@@ -6,7 +6,7 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/applications", label: "Applications" },
+  { href: "/admin/applications", label: "Unmatched Applications" },
   { href: "/admin/matched-applications", isActive: true, label: "Matched Applications" },
   { href: "/admin/greyhounds", label: "Greyhounds" },
 ];

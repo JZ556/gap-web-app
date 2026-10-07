@@ -10,7 +10,7 @@ type AdminGreyhoundDetailPageProps = {
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/applications", label: "Applications" },
+  { href: "/admin/applications", label: "Unmatched Applications" },
   { href: "/admin/matched-applications", label: "Matched Applications" },
   { href: "/admin/greyhounds", isActive: true, label: "Greyhounds" },
 ];

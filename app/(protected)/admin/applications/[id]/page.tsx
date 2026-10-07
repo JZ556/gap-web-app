@@ -14,7 +14,7 @@ type AdminApplicationDetailPageProps = {
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/applications", isActive: true, label: "Applications" },
+  { href: "/admin/applications", isActive: true, label: "Unmatched Applications" },
   { href: "/admin/matched-applications", label: "Matched Applications" },
   { href: "/admin/greyhounds", label: "Greyhounds" },
 ];

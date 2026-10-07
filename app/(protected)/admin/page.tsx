@@ -2,7 +2,7 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 
 const adminNavItems = [
   { href: "/admin", isActive: true, label: "Dashboard" },
-  { href: "/admin/applications", label: "Applications" },
+  { href: "/admin/applications", label: "Unmatched Applications" },
   { href: "/admin/matched-applications", label: "Matched Applications" },
   { href: "/admin/greyhounds", label: "Greyhounds" },
 ];
@@ -11,7 +11,7 @@ const metrics = [
   { label: "Total Applications", value: "1,248" },
   { label: "Pending Review", value: "56" },
   { label: "Available Greyhounds", value: "89" },
-  { label: "Successful Matches", value: "432" },
+  { label: "Matched Applications", value: "432" },
 ];
 
 export default function AdminDashboardPage() {

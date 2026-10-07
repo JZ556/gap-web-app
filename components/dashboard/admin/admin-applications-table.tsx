@@ -19,7 +19,7 @@ export function AdminApplicationsTable({
     return (
       <section className="rounded-md border border-border bg-white p-8 text-center shadow-sm">
         <h2 className="text-2xl font-extrabold tracking-tight text-primary">
-          Applications
+          Unmatched Applications
         </h2>
         <p className="mt-3 text-sm text-foreground/70">
           There are no pending applications waiting to be matched.
@@ -32,7 +32,7 @@ export function AdminApplicationsTable({
     <section className="space-y-6">
       <div>
         <h2 className="text-3xl font-extrabold tracking-tight text-primary">
-          Applications
+          Unmatched Applications
         </h2>
         <p className="mt-2 text-sm text-foreground/70">
           Review pending adoption applications and open a detail page to match a greyhound.
