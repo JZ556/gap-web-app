@@ -18,3 +18,27 @@ export function listPendingApplicationsForAdmin() {
     },
   });
 }
+
+export function listMatchedApplicationsForAdmin() {
+  return prisma.application.findMany({
+    where: {
+      status: ApplicationStatus.MATCHED,
+      match: { isNot: null },
+    },
+    orderBy: { match: { matchedAt: "desc" } },
+    select: {
+      id: true,
+      applicationNumber: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      mobile: true,
+      match: {
+        select: {
+          matchedAt: true,
+          greyhound: { select: { id: true, name: true } },
+        },
+      },
+    },
+  });
+}
