@@ -1,5 +1,5 @@
 import { DashboardShell } from "@/components/layout/dashboard-shell";
-import { UserDashboardOverview } from "@/components/dashboard/user/user-dashboard-overview";
+import { UserDashboardLoader } from "@/components/dashboard/user/user-dashboard-loader";
 
 const userNavItems = [
   { href: "/dashboard", isActive: true, label: "Dashboard" },
@@ -14,7 +14,7 @@ export default function UserDashboardPage() {
       brandTitle="Greyhound Racing NSW"
       navItems={userNavItems}
     >
-      <UserDashboardOverview firstName="John" totalApplications={10} />
+      <UserDashboardLoader />
     </DashboardShell>
   );
 }
