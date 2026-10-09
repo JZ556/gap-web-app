@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
-import type { LucideIcon } from "lucide-react";
-import { PawPrint } from "lucide-react";
+import Image from "next/image";
+import gapLogo from "@/public/images/gap sign.jpeg";
 import { SidebarNav, type SidebarNavItem } from "@/components/layout/sidebar-nav";
 
 type DashboardShellProps = {
-  brandIcon?: LucideIcon;
   brandSubtitle: string;
   brandTitle: string;
   children: ReactNode;
@@ -12,7 +11,6 @@ type DashboardShellProps = {
 };
 
 export function DashboardShell({
-  brandIcon: BrandIcon = PawPrint,
   brandSubtitle,
   brandTitle,
   children,
@@ -23,15 +21,17 @@ export function DashboardShell({
       <div className="grid min-h-screen bg-white md:grid-cols-[240px_1fr]">
         <aside className="flex border-b border-border bg-white md:border-b-0 md:border-r">
           <div className="flex min-h-full w-full flex-col">
-            <div className="flex items-center gap-3 px-5 py-7">
-              <div className="grid size-10 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
-                <BrandIcon aria-hidden="true" className="size-6" strokeWidth={2.5} />
-              </div>
+            <div className="flex flex-col items-center gap-3 px-4 py-6 text-center">
+              <Image
+                alt="Greyhounds As Pets"
+                className="h-auto w-32 md:w-44"
+                src={gapLogo}
+              />
               <div className="min-w-0">
-                <p className="text-lg font-extrabold leading-tight tracking-tight text-primary">
+                <p className="text-base font-extrabold leading-tight text-primary">
                   {brandTitle}
                 </p>
-                <p className="mt-1 text-xs leading-4 text-foreground/65">
+                <p className="mt-1 text-sm leading-5 text-foreground/65">
                   {brandSubtitle}
                 </p>
               </div>
