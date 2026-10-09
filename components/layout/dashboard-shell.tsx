@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
-import gapLogo from "@/public/images/gap sign.jpeg";
+import gapLogo from "@/public/images/gap-sign.jpeg";
 import { SidebarNav, type SidebarNavItem } from "@/components/layout/sidebar-nav";
 
 type DashboardShellProps = {
