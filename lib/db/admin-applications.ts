@@ -42,3 +42,22 @@ export function listMatchedApplicationsForAdmin() {
     },
   });
 }
+
+export function findPendingApplicationForAdmin(id: string) {
+  return prisma.application.findFirst({
+    where: { id, status: ApplicationStatus.PENDING_REVIEW },
+  });
+}
+
+export function findMatchedApplicationForAdmin(id: string) {
+  return prisma.application.findFirst({
+    where: {
+      id,
+      status: ApplicationStatus.MATCHED,
+      match: { isNot: null },
+    },
+    include: {
+      match: { include: { greyhound: true } },
+    },
+  });
+}
