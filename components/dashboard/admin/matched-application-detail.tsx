@@ -7,7 +7,6 @@ export type MatchedApplicationDetailData = {
   applicantName: string;
   bestCallTime: string;
   childrenUnder15: string;
-  consentGiven: boolean;
   email: string;
   greyhoundAge: string;
   greyhoundId: string;
@@ -78,7 +77,6 @@ export function MatchedApplicationDetail({
             <DetailItem label="Children Under 15" value={application.childrenUnder15} />
             <DetailItem label="Referral Source" value={application.referralSource} />
             <DetailItem label="Serious Criminal Offence" value={application.hasSeriousConviction} />
-            <DetailItem label="Consent Given" value={application.consentGiven ? "Yes" : "No"} />
           </DetailCard>
 
           <div className="rounded-md border border-border bg-white p-6 shadow-sm">
