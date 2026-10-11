@@ -2,11 +2,18 @@ import Link from "next/link";
 
 export type AdminApplicationRow = {
   applicantName: string;
+  applicationNumber: string;
   email: string;
   id: string;
   mobile: string;
   submittedAt: string;
 };
+
+const submittedDateFormatter = new Intl.DateTimeFormat("en-AU", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 
 type AdminApplicationsTableProps = {
   applications: AdminApplicationRow[];
@@ -56,13 +63,13 @@ export function AdminApplicationsTable({
               {applications.map((application) => (
                 <tr className="transition hover:bg-surface-app" key={application.id}>
                   <td className="px-5 py-4 font-semibold text-foreground">
-                    {application.id}
+                    {application.applicationNumber}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
                     {application.applicantName}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
-                    {application.submittedAt}
+                    {submittedDateFormatter.format(new Date(application.submittedAt))}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
                     {application.email}
