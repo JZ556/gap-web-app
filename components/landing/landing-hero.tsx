@@ -36,15 +36,14 @@ export function LandingHero() {
   return (
     <main className="min-h-screen bg-background">
       <header className="bg-primary text-white">
-        <div className="mx-auto flex h-20 max-w-360 items-center justify-between px-6 sm:px-10 lg:px-12">
-          <Link className="flex items-center gap-3 font-extrabold" href="/">
-            <PawPrint aria-hidden="true" className="size-8 text-accent" strokeWidth={2.5} />
-            <span className="text-lg tracking-tight sm:text-xl">
+        <div className="mx-auto flex h-20 max-w-360 items-center justify-between gap-3 px-4 sm:px-10 lg:px-12">
+          <Link className="min-w-0 font-extrabold" href="/">
+            <span className="text-base leading-tight sm:text-xl">
               Greyhound Racing NSW
             </span>
           </Link>
           <Link
-            className="rounded-md px-4 py-2 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            className="shrink-0 rounded-md px-3 py-2 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:px-4"
             href="/login"
           >
             Login
