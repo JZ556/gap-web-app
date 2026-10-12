@@ -4,19 +4,23 @@ import type { ReactNode } from "react";
 export type AdminApplicationDetailData = {
   additionalComments?: string;
   address: string;
+  applicationNumber: string;
   bestCallTime: string;
   childrenUnder15: string;
   email: string;
+  experience: string;
   firstName: string;
   hasPets: string;
+  hasSecureYard: string;
   hasSeriousConviction: string;
   id: string;
   lastName: string;
   mobile: string;
+  petDetails?: string;
   postcode: string;
   referralSource: string;
+  residenceType: string;
   state: string;
-  status: "unmatched";
   submittedAt: string;
   suburb: string;
 };
@@ -32,11 +36,13 @@ export type AvailableGreyhoundOption = {
 type AdminApplicationDetailProps = {
   application: AdminApplicationDetailData;
   availableGreyhounds: AvailableGreyhoundOption[];
+  greyhoundLoadError?: string;
 };
 
 export function AdminApplicationDetail({
   application,
   availableGreyhounds,
+  greyhoundLoadError,
 }: AdminApplicationDetailProps) {
   const applicantName = `${application.firstName} ${application.lastName}`;
 
@@ -60,7 +66,7 @@ export function AdminApplicationDetail({
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           <DetailCard title="Application Summary">
-            <DetailItem label="Application ID" value={application.id} />
+            <DetailItem label="Application ID" value={application.applicationNumber} />
             <DetailItem label="Applicant Name" value={applicantName} />
             <DetailItem label="Date Submitted" value={application.submittedAt} />
             <DetailItem label="Status" value="Pending Review" />
@@ -80,8 +86,12 @@ export function AdminApplicationDetail({
           </DetailCard>
 
           <DetailCard title="Household And Disclosure">
+            <DetailItem label="Residence Type" value={application.residenceType} />
+            <DetailItem label="Secure Yard" value={application.hasSecureYard} />
             <DetailItem label="Has Pets" value={application.hasPets} />
+            {application.petDetails ? <DetailItem label="Pet Details" value={application.petDetails} /> : null}
             <DetailItem label="Children Under 15" value={application.childrenUnder15} />
+            <DetailItem label="Dog Experience" value={application.experience} />
             <DetailItem label="Referral Source" value={application.referralSource} />
             <DetailItem label="Serious Criminal Offence" value={application.hasSeriousConviction} />
           </DetailCard>
@@ -104,7 +114,10 @@ export function AdminApplicationDetail({
             Select an available greyhound. Matching will move this application to matched applications.
           </p>
 
-          <form className="mt-6 space-y-5">
+          <div className="mt-6 space-y-5">
+            {greyhoundLoadError ? (
+              <p className="text-sm font-semibold text-danger" role="alert">{greyhoundLoadError}</p>
+            ) : null}
             <label className="block">
               <span className="text-sm font-semibold text-primary">
                 Available Greyhound
@@ -112,11 +125,12 @@ export function AdminApplicationDetail({
               <select
                 className="mt-2 h-11 w-full rounded-sm border border-border bg-white px-3 text-sm outline-none transition focus:border-primary"
                 defaultValue=""
+                disabled={availableGreyhounds.length === 0}
                 name="greyhoundId"
                 required
               >
                 <option disabled value="">
-                  Select a greyhound
+                  {availableGreyhounds.length === 0 ? "No available greyhounds" : "Select a greyhound"}
                 </option>
                 {availableGreyhounds.map((greyhound) => (
                   <option key={greyhound.id} value={greyhound.id}>
@@ -127,12 +141,13 @@ export function AdminApplicationDetail({
             </label>
 
             <button
-              className="h-11 w-full rounded-sm bg-primary px-5 text-sm font-extrabold text-white transition hover:bg-primary-hover"
-              type="submit"
+              className="h-11 w-full rounded-sm bg-primary px-5 text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              disabled
+              type="button"
             >
               Match Application
             </button>
-          </form>
+          </div>
         </aside>
       </div>
     </section>
