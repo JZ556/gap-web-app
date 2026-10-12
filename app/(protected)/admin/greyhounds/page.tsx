@@ -1,7 +1,4 @@
-import {
-  GreyhoundInventoryTable,
-  type GreyhoundInventoryRow,
-} from "@/components/dashboard/admin/greyhound-inventory-table";
+import { GreyhoundInventoryLoader } from "@/components/dashboard/admin/greyhound-inventory-loader";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 
 const adminNavItems = [
@@ -11,41 +8,6 @@ const adminNavItems = [
   { href: "/admin/greyhounds", isActive: true, label: "Greyhounds" },
 ];
 
-const mockGreyhounds: GreyhoundInventoryRow[] = [
-  {
-    age: "2 years",
-    id: "GH-2026-001",
-    location: "Sydney",
-    name: "Luna",
-    sex: "Female",
-    status: "available",
-  },
-  {
-    age: "3 years",
-    id: "GH-2026-002",
-    location: "Melbourne",
-    name: "Barnaby",
-    sex: "Male",
-    status: "matched",
-  },
-  {
-    age: "4 years",
-    id: "GH-2026-003",
-    location: "Brisbane",
-    name: "Dash",
-    sex: "Male",
-    status: "available",
-  },
-  {
-    age: "5 years",
-    id: "GH-2026-004",
-    location: "Western Sydney",
-    name: "Maestro",
-    sex: "Male",
-    status: "available",
-  },
-];
-
 export default function AdminGreyhoundsPage() {
   return (
     <DashboardShell
@@ -53,7 +15,7 @@ export default function AdminGreyhoundsPage() {
       brandTitle="GRNSW Admin"
       navItems={adminNavItems}
     >
-      <GreyhoundInventoryTable greyhounds={mockGreyhounds} />
+      <GreyhoundInventoryLoader />
     </DashboardShell>
   );
 }

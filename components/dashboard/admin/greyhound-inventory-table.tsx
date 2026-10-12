@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-type GreyhoundStatus = "available" | "matched";
+type GreyhoundStatus = "AVAILABLE" | "MATCHED";
 
 export type GreyhoundInventoryRow = {
   age: string;
@@ -16,13 +16,13 @@ type GreyhoundInventoryTableProps = {
 };
 
 const statusLabels: Record<GreyhoundStatus, string> = {
-  available: "Available",
-  matched: "Matched",
+  AVAILABLE: "Available",
+  MATCHED: "Matched",
 };
 
 const statusStyles: Record<GreyhoundStatus, string> = {
-  available: "bg-accent/15 text-primary",
-  matched: "bg-callout/35 text-primary",
+  AVAILABLE: "bg-accent/15 text-primary",
+  MATCHED: "bg-callout/35 text-primary",
 };
 
 export function GreyhoundInventoryTable({
