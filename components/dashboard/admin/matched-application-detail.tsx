@@ -4,23 +4,27 @@ import type { ReactNode } from "react";
 export type MatchedApplicationDetailData = {
   additionalComments?: string;
   address: string;
+  applicationNumber: string;
   applicantName: string;
   bestCallTime: string;
   childrenUnder15: string;
   email: string;
+  experience: string;
   greyhoundAge: string;
   greyhoundId: string;
   greyhoundLocation: string;
   greyhoundName: string;
   greyhoundSex: string;
   hasPets: string;
+  hasSecureYard: string;
   hasSeriousConviction: string;
-  id: string;
   matchedAt: string;
   matchId: string;
   mobile: string;
+  petDetails?: string;
   postcode: string;
   referralSource: string;
+  residenceType: string;
   state: string;
   submittedAt: string;
   suburb: string;
@@ -46,14 +50,14 @@ export function MatchedApplicationDetail({
           Matched Application Detail
         </h2>
         <p className="mt-2 text-sm text-foreground/70">
-          Review the matched application and unmatch it if the pairing needs to be changed.
+          Review the application and its matched greyhound.
         </p>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
           <DetailCard title="Application Summary">
-            <DetailItem label="Application ID" value={application.id} />
+            <DetailItem label="Application ID" value={application.applicationNumber} />
             <DetailItem label="Applicant Name" value={application.applicantName} />
             <DetailItem label="Date Submitted" value={application.submittedAt} />
             <DetailItem label="Status" value="Matched" />
@@ -73,8 +77,12 @@ export function MatchedApplicationDetail({
           </DetailCard>
 
           <DetailCard title="Household And Disclosure">
+            <DetailItem label="Residence Type" value={application.residenceType} />
+            <DetailItem label="Secure Yard" value={application.hasSecureYard} />
             <DetailItem label="Has Pets" value={application.hasPets} />
+            {application.petDetails ? <DetailItem label="Pet Details" value={application.petDetails} /> : null}
             <DetailItem label="Children Under 15" value={application.childrenUnder15} />
+            <DetailItem label="Dog Experience" value={application.experience} />
             <DetailItem label="Referral Source" value={application.referralSource} />
             <DetailItem label="Serious Criminal Offence" value={application.hasSeriousConviction} />
           </DetailCard>
@@ -114,7 +122,8 @@ export function MatchedApplicationDetail({
               Unmatching will return this application to the pending list and make the greyhound available again.
             </p>
             <button
-              className="mt-6 h-11 w-full rounded-sm border border-danger px-5 text-sm font-extrabold text-danger transition hover:bg-danger hover:text-white"
+              className="mt-6 h-11 w-full rounded-sm border border-danger px-5 text-sm font-extrabold text-danger disabled:cursor-not-allowed disabled:opacity-50"
+              disabled
               type="button"
             >
               Unmatch
