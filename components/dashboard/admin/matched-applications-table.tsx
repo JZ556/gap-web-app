@@ -2,12 +2,19 @@ import Link from "next/link";
 
 export type MatchedApplicationRow = {
   applicantName: string;
+  applicationNumber: string;
   email: string;
   greyhoundName: string;
   id: string;
   matchedAt: string;
   mobile: string;
 };
+
+const matchedDateFormatter = new Intl.DateTimeFormat("en-AU", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 
 type MatchedApplicationsTableProps = {
   applications: MatchedApplicationRow[];
@@ -58,7 +65,7 @@ export function MatchedApplicationsTable({
               {applications.map((application) => (
                 <tr className="transition hover:bg-surface-app" key={application.id}>
                   <td className="px-5 py-4 font-semibold text-foreground">
-                    {application.id}
+                    {application.applicationNumber}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
                     {application.applicantName}
@@ -67,7 +74,7 @@ export function MatchedApplicationsTable({
                     {application.greyhoundName}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
-                    {application.matchedAt}
+                    {matchedDateFormatter.format(new Date(application.matchedAt))}
                   </td>
                   <td className="px-5 py-4 text-foreground/75">
                     {application.email}
