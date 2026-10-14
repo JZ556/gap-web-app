@@ -20,7 +20,9 @@
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-email": "^6.11.1",
     "react-hook-form": "^7.85.0",
+    "resend": "^6.32.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
