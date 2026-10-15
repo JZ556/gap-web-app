@@ -5,12 +5,10 @@ import { FirebaseError } from "firebase/app";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, Mail } from "lucide-react";
-import { OAuthButton } from "@/components/auth/oauth-button";
 import { useAuth } from "@/components/providers/auth-provider";
 
 type LoginFormProps = {
   destination: "/dashboard" | "/admin";
-  showGoogleAuth?: boolean;
 };
 
 type ProfileRole = "USER" | "ADMIN";
@@ -31,7 +29,7 @@ function readProfileRole(value: unknown): ProfileRole | null {
   return profile.role === "USER" || profile.role === "ADMIN" ? profile.role : null;
 }
 
-export function LoginForm({ destination, showGoogleAuth = true }: LoginFormProps) {
+export function LoginForm({ destination }: LoginFormProps) {
   const router = useRouter();
   const { login, logout } = useAuth();
   const [submitting, setSubmitting] = useState(false);
@@ -168,22 +166,6 @@ export function LoginForm({ destination, showGoogleAuth = true }: LoginFormProps
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
       </div>
 
-      {showGoogleAuth ? (
-        <>
-          <div className="flex items-center gap-3">
-            <span className="h-px flex-1 bg-border" />
-            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">
-              or
-            </span>
-            <span className="h-px flex-1 bg-border" />
-          </div>
-
-          <div className="space-y-3">
-            <OAuthButton label="Continue with Google" />
-            <OAuthButton label="Continue with Microsoft" />
-          </div>
-        </>
-      ) : null}
     </form>
   );
 }

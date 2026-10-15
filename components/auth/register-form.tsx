@@ -4,7 +4,6 @@ import { useState, type SubmitEvent } from "react";
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, User } from "lucide-react";
-import { OAuthButton } from "@/components/auth/oauth-button";
 import { useAuth } from "@/components/providers/auth-provider";
 
 export function RegisterForm() {
@@ -199,18 +198,6 @@ export function RegisterForm() {
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
       </div>
 
-      <div className="flex items-center gap-3">
-        <span className="h-px flex-1 bg-border" />
-        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">
-          or
-        </span>
-        <span className="h-px flex-1 bg-border" />
-      </div>
-
-      <div className="space-y-3">
-        <OAuthButton label="Sign up with Google" />
-        <OAuthButton label="Sign up with Microsoft" />
-      </div>
     </form>
   );
 }
