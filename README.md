@@ -1,42 +1,56 @@
-# Greyhound Rescue & Adoption Portal
+# Greyhound Adoption Portal
 
-A Next.js application for connecting retired racing greyhounds with suitable foster and adoptive homes.
+A full-stack adoption portal for connecting applicants with retired greyhounds. Applicants manage their applications in a self-service dashboard, while staff review submissions, inspect greyhound records, and manage matches from a separate admin workspace.
 
-## Stack
+## Features
 
-- Next.js App Router, React, and TypeScript
-- Tailwind CSS v4
-- React Hook Form, Zod, and `@hookform/resolvers`
-- Planned server-side REST API and PostgreSQL integration
+- Email/password registration, login, logout, and password reset with Firebase Authentication
+- Applicant dashboard with application count, submission form, status list, and detail pages
+- Staff dashboard with application and greyhound metrics, pending and matched application views, and greyhound inventory
+- Transactional matching and unmatching that keep application and greyhound statuses in sync
+- Protected API routes with Firebase ID token verification and role-based access checks
+- Match notification emails rendered with React Email and sent through Resend
 
-## Local setup
+## Tech Stack
 
-1. Install Node.js 20.9 or later.
-2. Install dependencies with `npm ci`.
-3. Copy `.env.example` to `.env.local` and replace the local placeholder values.
-4. Start the development server with `npm run dev`.
-5. Open [http://localhost:3000](http://localhost:3000).
+- Next.js App Router, React, TypeScript, and Tailwind CSS v4
+- Firebase Authentication (client SDK and Admin SDK)
+- Neon PostgreSQL with Prisma ORM and migrations
+- Zod for request validation
+- Resend and React Email for match notifications
+- Jest for application validation tests
 
-## Quality checks
+## Local Setup
 
-Run these before every commit:
+Install Node.js 20.9 or later, then copy `.env.example` to `.env.local` and fill in the values for your Neon, Firebase, and Resend projects. Never commit `.env.local` or service-account credentials.
+
+```bash
+npm ci
+npx prisma generate
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). For a new database, run `npx prisma migrate deploy` before starting the app to apply the committed migrations.
+
+The runtime uses the pooled `DATABASE_URL`. Prisma migrations use the direct `DIRECT_DATABASE_URL`. The `NEXT_PUBLIC_FIREBASE_*` variables are browser-visible Firebase configuration; `FIREBASE_PRIVATE_KEY`, `RESEND_API_KEY`, and database URLs must remain server-side. See `.env.example` for the complete variable list and formatting notes.
+
+Staff accounts are not created by public registration. Create the staff user in Firebase Authentication and give the matching Neon `profiles` row the `ADMIN` role. New public registrations receive the `USER` role.
+
+## Quality Checks
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
-## Project conventions
+The Jest suite covers application input validation. Match, email, and unmatch should also be checked end to end with test accounts.
 
-- Keep routes in `app/` and prefer Server Components by default.
-- Put reusable primitives in `components/ui/`, feature-specific UI in `components/features/`, and shared server/client helpers in `lib/`.
-- Use Zod schemas as the source of truth for request validation and derive form types from them.
-- Use the shared Tailwind colour tokens from `app/globals.css`; do not introduce one-off brand colours.
-- Do not commit `.env.local`, database credentials, or other secrets.
-- Keep each commit focused on one complete, reviewable change.
+## Deployment Notes
 
-## Design foundation
+Set the variables from `.env.example` in the hosting platform rather than uploading `.env.local`. For a Vercel build, use `npx prisma generate && npm run build` so the ignored generated client exists. Apply database migrations separately using the direct connection; do not run migrations on every build. Add the deployed domain to Firebase Authentication's authorized domains.
 
-The application uses Open Sans with a light, institutional visual system. Its primary colour is deep navy (`#00334c`), cyan is used for interactive emphasis, and green is reserved for success and availability states. The global tokens in `app/globals.css` are the shared source of truth for future public and admin screens.
-//san man here
+## Project Note
+
+This is not an official Greyhound Racing NSW service. The landing-page greyhound profiles are sample content; application and staff dashboard data come from the database. Match emails currently go to the configured `DEMO_NOTIFICATION_EMAIL`, not directly to the applicant.
 
