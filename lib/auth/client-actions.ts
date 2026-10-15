@@ -2,6 +2,7 @@
 
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   type UserCredential,
@@ -19,4 +20,8 @@ export function register(email: string, password: string): Promise<UserCredentia
 
 export function logout(): Promise<void> {
   return signOut(firebaseAuth);
+}
+
+export function requestPasswordReset(email: string): Promise<void> {
+  return sendPasswordResetEmail(firebaseAuth, email.trim());
 }
