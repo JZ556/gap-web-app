@@ -9,7 +9,7 @@ const adoptionHeroes = [
       "Barnaby is a gentle giant who loves leaning against you for pats. He is very food motivated and is adjusting wonderfully to pet life.",
     image: "/images/stitch-barnaby.jpg",
     location: "Melbourne",
-    name: "Barnaby",
+    name: "Buddy",
     sex: "Male",
   },
   {
@@ -94,7 +94,7 @@ export function LandingHero() {
             </h2>
             <p className="mt-4 text-base leading-7 text-foreground/75">
               Our adoption program carefully matches retired greyhounds with the
-              perfect families. Every greyhound is vet-checked, desexed, and
+              perfect families. Every greyhound is vet checked, desexed, and
               comprehensively assessed to ensure they are ready for a comfortable
               new life off the track. We are committed to finding forever homes
               where they can thrive as beloved companions.
@@ -107,25 +107,18 @@ export function LandingHero() {
         className="mx-auto max-w-360 px-6 py-16 sm:px-10 lg:px-12 lg:py-24"
         id="adoption-heroes"
       >
-        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="mb-12">
           <div>
             <h2 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
-              Today&apos;s Adoption Heroes
+              Meet the Greyhounds
             </h2>
             <p className="mt-3 text-base text-foreground/75">
-              Meet our latest greyhounds ready for their forever homes.
+              A glimpse of the greyhounds in our adoption program.
             </p>
           </div>
-          <a
-            className="hidden items-center gap-2 self-start text-sm font-bold text-primary transition hover:text-secondary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary md:inline-flex md:self-auto"
-            href="#adoption-heroes"
-          >
-            View All Heroes
-            <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2.5} />
-          </a>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {adoptionHeroes.map((hound) => (
             <article
               className="overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
@@ -133,15 +126,12 @@ export function LandingHero() {
             >
               <div className="relative aspect-4/3 overflow-hidden">
                 <Image
-                  alt={`${hound.name}, an available retired greyhound`}
+                  alt={`${hound.name}, a retired greyhound`}
                   className="object-cover transition duration-500 hover:scale-105"
                   fill
                   sizes="(max-width: 768px) calc(100vw - 3rem), (max-width: 1280px) calc(50vw - 3rem), 25vw"
                   src={hound.image}
                 />
-                <span className="absolute left-4 top-4 rounded-full bg-accent px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-primary shadow-sm">
-                  Available
-                </span>
               </div>
               <div className="p-6">
                 <h3 className="text-2xl font-extrabold tracking-tight text-primary">
@@ -162,23 +152,6 @@ export function LandingHero() {
             </article>
           ))}
 
-          <article className="hidden overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)] xl:block">
-            <div className="relative grid aspect-4/3 place-items-center bg-surface-muted text-primary/25">
-              <PawPrint aria-hidden="true" className="size-14" />
-              <span className="absolute left-4 top-4 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white shadow-sm">
-                Coming soon
-              </span>
-            </div>
-            <div className="p-6">
-              <h3 className="text-2xl font-extrabold tracking-tight text-primary">
-                More Hounds
-              </h3>
-              <p className="mt-4 text-sm leading-6 text-foreground/75">
-                Check back soon for more wonderful greyhounds looking for their
-                forever couches. New dogs are added weekly.
-              </p>
-            </div>
-          </article>
         </div>
       </section>
 
