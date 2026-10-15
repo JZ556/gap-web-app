@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
@@ -65,9 +66,13 @@ function formatAge(years: number, months: number) {
 }
 
 export function MatchedApplicationDetailLoader({ id }: { id: string }) {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [reloadIndex, setReloadIndex] = useState(0);
+  const [isUnmatching, setIsUnmatching] = useState(false);
+  const [unmatchError, setUnmatchError] = useState<string>();
+  const [unmatchSessionExpired, setUnmatchSessionExpired] = useState(false);
 
   useEffect(() => {
     if (loading || !user) return;
@@ -155,6 +160,51 @@ export function MatchedApplicationDetailLoader({ id }: { id: string }) {
     return () => controller.abort();
   }, [id, user, loading, reloadIndex]);
 
+  async function handleUnmatch() {
+    if (!user || isUnmatching || loadState.status !== "ready") return;
+
+    setIsUnmatching(true);
+    setUnmatchError(undefined);
+    setUnmatchSessionExpired(false);
+
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(
+        `/api/admin/applications/${encodeURIComponent(id)}/matches/${encodeURIComponent(loadState.application.matchId)}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const result = (await response.json()) as {
+        applicationId?: string;
+        greyhoundId?: string;
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setUnmatchSessionExpired(response.status === 401);
+        setUnmatchError(
+          response.status === 401
+            ? "Your session has expired. Please sign in again."
+            : result.error || "Could not unmatch this application.",
+        );
+        return;
+      }
+
+      if (result.applicationId !== id || !result.greyhoundId) {
+        setUnmatchError("The result is unclear. Check the pending applications before trying again.");
+        return;
+      }
+
+      router.replace("/admin");
+    } catch {
+      setUnmatchError("Could not confirm the result. Check the pending applications before trying again.");
+    } finally {
+      setIsUnmatching(false);
+    }
+  }
+
   if (!loading && !user) {
     return (
       <section className="rounded-md border border-danger/40 bg-white p-6" role="alert">
@@ -213,5 +263,13 @@ export function MatchedApplicationDetailLoader({ id }: { id: string }) {
     );
   }
 
-  return <MatchedApplicationDetail application={loadState.application} />;
+  return (
+    <MatchedApplicationDetail
+      application={loadState.application}
+      isUnmatching={isUnmatching}
+      unmatchError={unmatchError}
+      unmatchSessionExpired={unmatchSessionExpired}
+      onUnmatch={handleUnmatch}
+    />
+  );
 }

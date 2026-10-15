@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { LoaderCircle } from "lucide-react";
 
 export type MatchedApplicationDetailData = {
   additionalComments?: string;
@@ -32,10 +33,18 @@ export type MatchedApplicationDetailData = {
 
 type MatchedApplicationDetailProps = {
   application: MatchedApplicationDetailData;
+  isUnmatching: boolean;
+  unmatchError?: string;
+  unmatchSessionExpired: boolean;
+  onUnmatch: () => void;
 };
 
 export function MatchedApplicationDetail({
   application,
+  isUnmatching,
+  unmatchError,
+  unmatchSessionExpired,
+  onUnmatch,
 }: MatchedApplicationDetailProps) {
   return (
     <section className="space-y-6">
@@ -121,12 +130,24 @@ export function MatchedApplicationDetail({
             <p className="mt-2 text-sm leading-6 text-foreground/70">
               Unmatching will return this application to the pending list and make the greyhound available again.
             </p>
+            {unmatchError ? (
+              <div className="mt-4 space-y-2 text-sm font-semibold text-danger" role="alert">
+                <p>{unmatchError}</p>
+                {unmatchSessionExpired ? (
+                  <Link className="inline-block text-primary underline" href="/staff-login">
+                    Staff sign in
+                  </Link>
+                ) : null}
+              </div>
+            ) : null}
             <button
-              className="mt-6 h-11 w-full rounded-sm border border-danger px-5 text-sm font-extrabold text-danger disabled:cursor-not-allowed disabled:opacity-50"
-              disabled
+              className="mt-6 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-sm border border-danger px-5 text-sm font-extrabold text-danger transition hover:bg-danger/5 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isUnmatching || unmatchSessionExpired}
+              onClick={onUnmatch}
               type="button"
             >
-              Unmatch
+              {isUnmatching ? <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> : null}
+              {isUnmatching ? "Unmatching..." : "Unmatch"}
             </button>
           </section>
         </aside>
