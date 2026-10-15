@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { LoaderCircle } from "lucide-react";
 
 export type AdminApplicationDetailData = {
   additionalComments?: string;
@@ -37,13 +40,22 @@ type AdminApplicationDetailProps = {
   application: AdminApplicationDetailData;
   availableGreyhounds: AvailableGreyhoundOption[];
   greyhoundLoadError?: string;
+  isMatching: boolean;
+  matchError?: string;
+  matchSessionExpired: boolean;
+  onMatch: (greyhoundId: string) => void;
 };
 
 export function AdminApplicationDetail({
   application,
   availableGreyhounds,
   greyhoundLoadError,
+  isMatching,
+  matchError,
+  matchSessionExpired,
+  onMatch,
 }: AdminApplicationDetailProps) {
+  const [selectedGreyhoundId, setSelectedGreyhoundId] = useState("");
   const applicantName = `${application.firstName} ${application.lastName}`;
 
   return (
@@ -118,16 +130,26 @@ export function AdminApplicationDetail({
             {greyhoundLoadError ? (
               <p className="text-sm font-semibold text-danger" role="alert">{greyhoundLoadError}</p>
             ) : null}
+            {matchError ? (
+              <div className="space-y-2 text-sm font-semibold text-danger" role="alert">
+                <p>{matchError}</p>
+                {matchSessionExpired ? (
+                  <Link className="inline-block text-primary underline" href="/staff-login">
+                    Staff sign in
+                  </Link>
+                ) : null}
+              </div>
+            ) : null}
             <label className="block">
               <span className="text-sm font-semibold text-primary">
                 Available Greyhound
               </span>
               <select
                 className="mt-2 h-11 w-full rounded-sm border border-border bg-white px-3 text-sm outline-none transition focus:border-primary"
-                defaultValue=""
-                disabled={availableGreyhounds.length === 0}
+                value={selectedGreyhoundId}
+                onChange={(event) => setSelectedGreyhoundId(event.target.value)}
+                disabled={availableGreyhounds.length === 0 || isMatching}
                 name="greyhoundId"
-                required
               >
                 <option disabled value="">
                   {availableGreyhounds.length === 0 ? "No available greyhounds" : "Select a greyhound"}
@@ -141,11 +163,13 @@ export function AdminApplicationDetail({
             </label>
 
             <button
-              className="h-11 w-full rounded-sm bg-primary px-5 text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
-              disabled
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-sm bg-primary px-5 text-sm font-extrabold text-white transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!selectedGreyhoundId || isMatching || Boolean(greyhoundLoadError)}
+              onClick={() => onMatch(selectedGreyhoundId)}
               type="button"
             >
-              Match Application
+              {isMatching ? <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> : null}
+              {isMatching ? "Matching..." : "Match Application"}
             </button>
           </div>
         </aside>

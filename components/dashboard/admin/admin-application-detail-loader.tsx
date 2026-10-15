@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AlertCircle, LoaderCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
@@ -49,6 +50,12 @@ type GreyhoundsResponse = {
   error?: string;
 };
 
+type MatchResponse = {
+  match?: { id: string };
+  notification?: { status: "sent" | "failed" };
+  error?: string;
+};
+
 type LoadState =
   | { status: "loading" }
   | {
@@ -71,9 +78,14 @@ const submittedDateFormatter = new Intl.DateTimeFormat("en-AU", {
 });
 
 export function AdminApplicationDetailLoader({ id }: AdminApplicationDetailLoaderProps) {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const [loadState, setLoadState] = useState<LoadState>({ status: "loading" });
   const [reloadIndex, setReloadIndex] = useState(0);
+  const [isMatching, setIsMatching] = useState(false);
+  const [matchError, setMatchError] = useState<string>();
+  const [matchSessionExpired, setMatchSessionExpired] = useState(false);
+  const [notificationFailed, setNotificationFailed] = useState(false);
 
   useEffect(() => {
     if (loading || !user) return;
@@ -172,6 +184,53 @@ export function AdminApplicationDetailLoader({ id }: AdminApplicationDetailLoade
     return () => controller.abort();
   }, [id, user, loading, reloadIndex]);
 
+  async function handleMatch(greyhoundId: string) {
+    if (!user || isMatching) return;
+
+    setIsMatching(true);
+    setMatchError(undefined);
+    setMatchSessionExpired(false);
+
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(`/api/admin/applications/${encodeURIComponent(id)}/matches`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ greyhoundId }),
+      });
+      const result = (await response.json()) as MatchResponse;
+
+      if (!response.ok) {
+        setMatchSessionExpired(response.status === 401);
+        setMatchError(
+          response.status === 401
+            ? "Your session has expired. Please sign in again."
+            : result.error || "Could not match this application.",
+        );
+        return;
+      }
+
+      if (!result.match?.id || !result.notification) {
+        setMatchError("The result is unclear. Check matched applications before trying again.");
+        return;
+      }
+
+      if (result.notification.status === "failed") {
+        setNotificationFailed(true);
+        return;
+      }
+
+      router.replace("/admin");
+    } catch {
+      setMatchError("Could not confirm the result. Check matched applications before trying again.");
+    } finally {
+      setIsMatching(false);
+    }
+  }
+
   if (!loading && !user) {
     return (
       <section className="rounded-md border border-danger/40 bg-white p-6" role="alert">
@@ -230,11 +289,32 @@ export function AdminApplicationDetailLoader({ id }: AdminApplicationDetailLoade
     );
   }
 
+  if (notificationFailed) {
+    return (
+      <section className="space-y-4 rounded-md border border-border bg-white p-6" role="status">
+        <h2 className="text-xl font-bold text-primary">Application matched</h2>
+        <p className="text-sm text-foreground/75">
+          The match was saved, but the demo email notification could not be sent.
+        </p>
+        <div className="flex flex-wrap gap-4 text-sm font-semibold text-primary">
+          <Link className="underline" href={`/admin/matched-applications/${encodeURIComponent(id)}`}>
+            View matched application
+          </Link>
+          <Link className="underline" href="/admin">Back to dashboard</Link>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <AdminApplicationDetail
       application={loadState.application}
       availableGreyhounds={loadState.availableGreyhounds}
       greyhoundLoadError={loadState.greyhoundLoadError}
+      isMatching={isMatching}
+      matchError={matchError}
+      matchSessionExpired={matchSessionExpired}
+      onMatch={handleMatch}
     />
   );
 }
