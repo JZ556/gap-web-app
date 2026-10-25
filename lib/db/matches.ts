@@ -30,6 +30,7 @@ export async function createMatch({
   matchedByUid,
 }: CreateMatchInput) {
   try {
+    // Roll back both status changes if the application or greyhound is no longer eligible.
     return await prisma.$transaction(async (tx) => {
       const applicationUpdate = await tx.application.updateMany({
         where: { id: applicationId, status: ApplicationStatus.PENDING_REVIEW },
